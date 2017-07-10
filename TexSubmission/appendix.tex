@@ -1,0 +1,69 @@
+\section{Exponential deviation inequalities for the forward filter and the backward information filter}
+\label{sec:appendix:expdev}The following result is proved in \cite{douc:garivier:moulines:olsson:2011}.
+\begin{lem}
+\label{lem:hoeffding:ratio}
+Assume that $a_N$, $b_N$, and $b$ are random variables defined on the same probability space such that there exist positive constants $\beta$, $B$, $C$, and $M$ satisfying
+\begin{enumerate}[(i)]
+    \item \label{it:bound:ab} $|a_N/b_N|\leq M$, $\mathbb{P}$-a.s.\ and  $b \geq \beta$, $\mathbb{P}$-a.s.,
+    \item \label{it:hoeff:a} For all $\epsilon>0$ and all $N\geq1$, $\mathbb{P} \left[ |a_N|>\epsilon \right]\leq B \rme^{-C N \left(\epsilon/M\right)^2}$,
+    \item \label{it:hoeff:b} For all $\epsilon>0$ and all $N\geq1$, $\mathbb{P}\left[|b_N-b|>\epsilon \right]\leq B \rme^{-C N \epsilon^2}$.
+\end{enumerate}
+Then, for all $\varepsilon>0$,
+\[
+\mathbb{P}\left[ \left| \frac{a_N}{b_N} \right| > \epsilon \right] \leq B \exp{\left\{-C N \left(\frac{\epsilon \beta}{2M} \right)^2 \right\}} \eqsp.
+\]
+\end{lem}
+
+Proposition~\ref{prop:exponential-inequality-forward} provides an exponential deviation inequality for the forward filter and is proved in \cite{douc:garivier:moulines:olsson:2011}.
+\begin{prop}
+\label{prop:exponential-inequality-forward}
+Assume that A\ref{assum:bound-likelihood} and A\ref{assum:borne-FFBS} hold for some $T > 0$. Then, for all $s\geq 1$,
+there exist $0 <B_s, C_s <\infty$ such that for all $N\ge 1$, $\epsilon > 0$, and all $h \in \functionset[b]{X}$,
+\begin{equation*}
+\PP\left( \left| \sumwght{s}^{-1 } \sum_{i=1}^N \swght{s}{i} h(\epartpred{s}{i}) - \filt{\Xinit,s}[h] \right| \geq \epsilon \right) \leq B_s \rme^{-C_s N \epsilon^2 / \oscnorm{h}^2}\eqsp.
+\end{equation*}
+\end{prop}
+
+Proposition~\ref{prop:exponential-inequality-backward} provides an exponential inequality for the backward information filter $\backDist[][\gamma]{t}{T}$. Its proof is similar to the proof \cite[Theorem~5]{douc:garivier:moulines:olsson:2011} and is omitted.
+
+\begin{prop}
+\label{prop:exponential-inequality-backward}
+Assume that A\ref{assum:bound-likelihood} and A\ref{assum:borne-TwoFilters} hold for some $T > 0$. Then, for all $0\le t\leq T$,
+there exist $0<B_{t|T}, C_{t|T}<\infty$  such that for all $N\ge 1$, $\epsilon > 0$, and all $h \in \functionset[b]{X}$,
+\begin{equation*}
+ \label{eq:Hoeffding-Backward-Filtering-normalized}
+\PP\left[ \left| \backsumwght{t}{T}^{-1} \sum_{i=1}^N \ebackwght{t}{T}{i} h(\ebackpart{t}{T}{i}) - \backDist[][\gamma]{t}{T}[h] \right| \geq \epsilon \right] \leq B_{t|T} \rme^{-C_{t|T} N \epsilon^2 / \oscnorm{h}^2}  \eqsp.
+\end{equation*}
+\end{prop}
+
+\section{Asymptotic normality of the forward filter and the backward information filter}
+\label{sec:appendix:TCL}
+
+Proposition~\ref{prop:CLT-forward} provides a CLT for the weighted particles $\{  (\ewght{s}{i},\epart{s}{i})\}_{i=1}^N$ approximating the filtering distribution $\filt{\Xinit,s}$ and is proved for instance in \cite{delmoral:2004}.
+\begin{prop}
+\label{prop:CLT-forward}
+Assume that A\ref{assum:bound-likelihood} and A\ref{assum:borne-FFBS} hold for some $T > 0$. Then, for all $0\le s\le T$ and all $h \in \functionset[b]{X}$,
+\[
+N^{1/2} \left(\sum_{i=1}^N \frac{\ewght{s}{i}}{\sumwght{s}} h(\epart{s}{i}) - \filt{\Xinit,s}[h]\right) \dlim_{N \to \infty} \mathcal{N}\left(0,\asymVar[\Xinit]{s}{h - \filt{\Xinit,s}[h]}\right)\eqsp,
+\]
+where 
+\begin{align*}
+\asymVar[\Xinit]{0}{h} &\eqdef \frac{ \int \XinitIS{0}(\rmd x_0)\ewght{0}{2}(x_0)h^2(x_0)}{\left(\int \XinitIS{0}(\rmd x_0)\ewght{0}{}(x_0)\right)^{2}}\quad\mbox{and for all\;} s\ge 1\eqsp,\\
+\asymVar[\Xinit]{s}{h} &\eqdef \frac{\asymVar[\Xinit]{s-1}{\int q(\cdot,x_{s})g_s(x_s)h(x_s)\rmd x_s}}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}\\
+&\hspace{2cm}+\frac{\filt{\Xinit,s-1}\left[\int \ewght{s}{}(\cdot,x_s)q(\cdot,x_s)g_s(x_s)h^2(x_s)\rmd x_s\right]\filt{\chi,s-1}[\adjfuncforward{s}]}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}\eqsp.
+\end{align*}
+\end{prop}
+Proposition~\ref{prop:CLT-backward} provides a CLT for the weighted particles $\{  (\ebackwght{t}{T}{j},\ebackpart{t}{T}{j})\}_{j=1}^N$ approximating the backward information filter. Its proof follows the same lines as the proof of Proposition~\ref{prop:CLT-forward} and is omitted for brevity.
+\begin{prop}
+\label{prop:CLT-backward}
+Assume that A\ref{assum:bound-likelihood} and A\ref{assum:borne-TwoFilters} hold. Then, for all $0\le t\le T$ and all $h \in \functionset[b]{X}$,
+\[
+N^{1/2} \left(\sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\ebackpart{t}{T}{j})- \backDist[][\gamma]{t}{T}[h]\right) \dlim_{N \to \infty} \mathcal{N}\left(0,\backasymVar[\gamma]{t}{T}{h-\backDist[][\gamma]{t}{T}[h]}\right)\eqsp,
+\]
+where 
+\begin{align*}
+\backasymVar[\gamma]{T}{T}{h} &\eqdef \frac{ \int \ebackinit_T(\rmd x_T)\ebackwght{T}{T}{2}(x_T)h^2(x_T)}{\left( \int \ebackinit_T(\rmd x_T)\ebackwght{T}{T}{}(x_T)\right)^{2}}\quad\mbox{and for all\;} t\le T-1\eqsp,\\
+\backasymVar[\gamma]{t}{T}{h} &\eqdef \frac{\backasymVar[\gamma]{t+1}{T}{\int\gamma_t(x_t)g_t(x_t)q(x_t,\cdot)\gamma^{-1}_{t+1}(\cdot)h(x_t)\rmd x_t}}{\backDist[][\gamma]{t+1}{T}^2\left[\int\gamma_t(x_t)g_t(x_t)q(x_t,\cdot)\gamma^{-1}_{t+1}(\cdot)\rmd x_t\right]}\\
+&\hspace{.5cm}+\frac{\backDist[][\gamma]{t+1}{T}\left[\int\backweight_t(x_t,\cdot)q(x_t,\cdot)g_t(x_t)\gamma_t(x_t)\gamma^{-1}_{t+1}(\cdot)h^2(x_t)\rmd x_t\right]\backDist[][\gamma]{t+1}{T}\left[\adjfunc{t}{T}{}\gamma_{t+1}^{-1}\right]}{\backDist[][\gamma]{t+1}{T}^2\left[\int\gamma_t(x_t)g_t(x_t)q(x_t,\cdot)\gamma^{-1}_{t+1}(\cdot)\rmd x_t\right]}\eqsp.
+\end{align*}
+\end{prop}

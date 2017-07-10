@@ -1,0 +1,108 @@
+\label{sec:ExponentialTwoFilters}
+In this section, we establish exponential deviation inequalities for  the two-filter algorithms introduced in Section~\ref{sec:TwoFilters}. Before stating the results, some additional notations are required. Define, for all $(x,x',x'') \in \Xset^3$,
+\begin{equation*}
+q^{[2]}(x,x';x'') = q(x,x'') q(x'',x')
+\end{equation*}
+and for any functions $f: \Xset^2 \to \rset$ and $g: \Xset \to \rset$,
+\[
+f \odot g(x,x') \eqdef f(x,x') g(x')\eqsp.
+\]
+Consider the following assumptions:
+\begin{assumptionA}
+\label{assum:bound-likelihood}
+$|q|_{\infty}<\infty$ and for all $0\le t \le T$, $g_t$ is positive and $|g_t|_{\infty}<\infty$.
+\end{assumptionA}
+
+\begin{assumptionA}
+\label{assum:borne-FFBS}
+For all $0\le t \le T$, $|\vartheta_t|_{\infty} < \infty$, $|p_t|_{\infty} < \infty$ and $|\ewght{t}{}|_{\infty} < \infty$ where
+    \begin{equation*}
+    \omega_0(x) \eqdef \dfrac{\rmd\chi}{\rmd\rho_0}(x)g_{0}(x)
+    \quad\mbox{and\;for\;all\;}t\ge 1\quad
+    \omega_t(x,x^{\prime}) \eqdef \dfrac{q(x,x^{\prime})g_{t}(x')}{\vartheta_t(x)p_t(x,x^{\prime})}\eqsp.
+    \end{equation*}
+\end{assumptionA}
+
+
+\begin{assumptionA}
+\label{assum:borne-TwoFilters}
+\begin{enumerate}[-]
+\item For all $0\le t \le T-1$, $\esssup{\adjfunc{t}{T}{}/\fakeprior_{t+1}}  < \infty$ and $|\kiss{t}{T}|_{\infty}<\infty$. For all $0\le t \le T$ $\esssup{\ebackwghtfunc{t}{T}}  < \infty$, where
+\[
+\ebackwghtfunc{T}{T}(x)\eqdef \frac{g_T(x)\gamma_T(x)}{\ebackinit_T(x)}\eqsp\mbox{and\;for\;all\;}0\le t< T,\eqsp \ebackwghtfunc{t}{T}(x,x')\eqdef  \frac{\gamma_t(x) g_t(x) q(x,x')}{\adjfunc{t}{T}{x'} \kiss{t}{T}(x',x)}\eqsp.
+\]
+\item For all $1\le t \le T-1$, $\esssup{\adjfunc[smooth]{t}{T}{} \odot \gamma_{t+1}^{-1}}< \infty$, $\esssup{q \odot \gamma_{t+1}^{-1}}< \infty$, $\esssup{\smwghtfunc{t}{T}}  < \infty$ and $\esssup{\kiss[smooth]{t}{T}}<\infty$ where
+\[
+\smwght{t}{T}{}(x,x';x'') \eqdef \frac{q^{[2]}(x,x';x'')  g_s(x'') }{\adjfunc[smooth]{t}{T}{x,x''}
+\kiss[smooth]{t}{T}(x,x'; x'') } \eqsp.
+\]
+\end{enumerate}
+\end{assumptionA}
+We first show that the weighted sample $\{(\swght{s}{i} \ebackwght{t}{T}{j}), (\epartpred{s}{i},\ebackpart{t}{T}{j})\}_{i,j=1}^N$ targets the product distribution $\filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}$.
+\begin{thm}
+\label{thm:Hoeffding-Two-Populations}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then, for all $0 \leq s<t \leq T$, there exist $0 <B_{s,t|T}, C_{s,t|T} <\infty$ such that for  all  $N\ge 1$, $\epsilon > 0$ and all $h \in \mathbb{F}_b(\Xset\times \Xset,\sigmaX\otimes\sigmaX)$,
+\begin{equation*}
+\PP\left( \left| \sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\epartpred{s}{i},\ebackpart{t}{T}{j}) - \filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}[h] \right| > \epsilon \right) \leq  B_{s,t|T} \rme^{-C_{s,t|T} N \epsilon^2/\oscnorm[2]{h}} \eqsp.
+\end{equation*}
+\end{thm}
+\begin{proof}
+The proof is postponed to Section~\ref{proof:thm:Hoeffding-Two-Populations}.
+\end{proof}
+We now study the weighted sample $\{ (\smwght{s}{T}{i},\smpart{s}{T}{\ell}) \}_{\ell=1}^N$ produced by the $\fwt$ algorithm of Fearnhead, Wyncoll and Tawn \cite{fearnhead:wyncoll:tawn:2010} defined in \eqref{eq:auxiliary-proposal-smoothing} and \eqref{eq:weight-fearnhead} and targeting the marginal smoothing distribution $\post[\chi]{s}{T}$.
+\begin{thm}[deviation inequality for $\fwt$ of \cite{fearnhead:wyncoll:tawn:2010}]
+\label{thm:Hoeffding-Fearnhead}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then, for all $s<T$, there exist $0 < B_{s|T},C_{s|T} < \infty$ such that for all $N\ge 1$, $\varepsilon>0$ and all  $h \in \functionset[b]{X}$,
+\begin{equation*}
+\PP\left( \left| \sum_{i=1}^N \frac{\smwght{s}{T}{i}}{\tilde{\Omega}_{s|T}} h(\smpart{s}{T}{i}) - \post[\chi]{s}{T} [h] \right| > \epsilon \right) \leq  B_{s|T} \rme^{-C_{s|T} N \epsilon^2 / \oscnorm[2]{h}} \eqsp.
+\end{equation*}
+\end{thm}
+\begin{proof}
+The proof is postponed to Section~\ref{proof:thm:Hoeffding-Fearnhead}.
+\end{proof}
+
+Using Theorem~\ref{thm:Hoeffding-Two-Populations} and Lemma~\ref{lem:hoeffding:ratio}, we may derive an exponential inequality for the weighted samples $\{ (\epart{s}{i},\smwght{s}{T}{i, \mathrm{f}}) \}_{i=1}^N$ and $ \{ (\ebackpart{s}{T}{i},\smwght{s}{T}{i, \mathrm{b}}) \}_{i=1}^N$ produced by the $\bdm$ algorithm of  \cite{briers:doucet:maskell:2010}, where $\smwght{s}{T}{i, \mathrm{f}}$  and $\smwght{s}{T}{i, \mathrm{b}}$ are defined in \eqref{eq:definition-smoothing-weight-forward} and \eqref{eq:definition-smoothing-weight-backward}. Therefore, both the forward and the backward particle approximations of the smoothing distribution converge to the marginal smoothing distribution, and these two approximations satisfy an exponential inequality.
+\begin{thm}[deviation inequality for the $\bdm$ algorithm of  \cite{briers:doucet:maskell:2010}]
+\label{th:exp:forward-backward}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then, for all $1\le s\le T-1$, there exist $0 < B_{s|T},C_{s|T} <\infty$ such that for all $N\ge 1$, $\varepsilon >0$ and all $h \in \functionset[b]{X}$,
+\begin{align}
+\label{eq:Exponential-Inequality-Forward}
+&\PP\left( \left| \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{f}}}{\tilde{\Omega}^{\mathrm{f}}_{s|T}} h(\epart{s}{i}) - \post[\Xinit]{s}{T} [h] \right| > \epsilon \right) \leq  B_{s|T} \rme^{-C_{s|T} N \epsilon^2 / \oscnorm[2]{h}} \eqsp, \\
+\label{eq:Exponential-Inequality-Backward}
+&\PP\left( \left| \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{b}}}{\tilde{\Omega}^{\mathrm{b}}_{s|T}} h(\ebackpart{s}{T}{i}) - \post[\Xinit]{s}{T} [h] \right| > \epsilon \right) \leq  B_{s|T} \rme^{-C_{s|T} N \epsilon^2 / \oscnorm[2]{h}} \eqsp.
+\end{align}
+\end{thm}
+\begin{proof}
+The proof is postponed to Section~\ref{proof:th:exp:forward-backward}.
+\end{proof}
+
+\begin{rem}
+Following \cite{douc:garivier:moulines:olsson:2011,dubarry:lecorff:2013,olsson:westerborn:2015}, time uniform exponential inequalities for the two-filter approximations of the marginal smoothing distributions may be obtained using {\em strong mixing} assumptions which are standard in the SMC literature.
+
+\begin{assumptionmix}
+\label{assum:mix}
+There exist $0<\sigma_- < \sigma_+<\infty$ and $c_->0$ such that for all $x,x'\in\Xset$, $\sigma_- \le q(x,x')\le \sigma_+$ and for all $t\ge 0$,  \[
+\int \Xinit (\rmd x_0)g_0(x_0)\ge c_-\quad\mbox{and}\quad\inf_{x\in\Xset}\int Q(x,\rmd x')g_t(x')\ge c_-\eqsp.
+\]
+\end{assumptionmix}
+
+\begin{assumptionmix}
+\label{assum:mix:gamma}
+There exist $0<\gamma_- < \gamma_+<\infty$ and $\check{c}_->0$ such that for all $x\in\Xset$ and all $t\ge0$, $\gamma_- \le \gamma_t(x)\le \gamma_+$ and for all $t\ge 0$,
+\[
+\int \gamma_T(x_T)g_T(x_T)\rmd x_T\ge \check{c}_- \quad\mbox{and}\quad\inf_{x\in\Xset}\int \gamma_t(x_t)g_t(x_t)q(x_t,x)\gamma_{t+1}^{-1}(x)\rmd x_t\ge \check{c}_-\eqsp.
+\]
+\end{assumptionmix}
+
+\begin{enumerate}[(i)]
+\item \label{it:exp:mix:for}If A\ref{assum:bound-likelihood} and A\ref{assum:borne-FFBS} hold uniformly in $T$ and if H\ref{assum:mix} holds, then, it is proved in \cite{douc:garivier:moulines:olsson:2011} that Proposition~\ref{prop:exponential-inequality-forward} holds with constants that are uniform in time : there exist $0 <B, C <\infty$ such that for all $s \geq 0$, $N > 0$, $\epsilon > 0$ and all $h \in \functionset[b]{X}$,
+\begin{equation*}
+\PP\left( \left| \sumwght{s}^{-1 } \sum_{i=1}^N \swght{s}{i} h(\epartpred{s}{i}) - \filt{\Xinit,s}[h] \right| \geq \epsilon \right) \leq B \rme^{-C N \epsilon^2 / \oscnorm{h}^2}\eqsp.
+\end{equation*}
+\item \label{it:exp:mix:back} It can be shown following the exact same steps that if A\ref{assum:bound-likelihood} and A\ref{assum:borne-TwoFilters} hold uniformly in $T$ and if H\ref{assum:mix} and H\ref{assum:mix:gamma} hold then Proposition~\ref{prop:exponential-inequality-backward} holds with constants that are uniform in time: there exist $0<B, C<\infty$  such that for all $t\geq 0$, $N\ge 1$, $\epsilon > 0$, and all $h \in \functionset[b]{X}$,
+\[
+\PP\left[ \left| \backsumwght{t}{T}^{-1} \sum_{i=1}^N \ebackwght{t}{T}{i} h(\ebackpart{t}{T}{i}) - \backDist[][\gamma]{t}{T}[h] \right| \geq \epsilon \right] \leq B\rme^{-C N \epsilon^2 / \oscnorm{h}^2}  \eqsp.
+\]
+\item \label{it:exp:mix:twofilt} Therefore, if A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold uniformly in $T$ and if H\ref{assum:mix} and H\ref{assum:mix:gamma} hold, then Theorem~\ref{thm:Hoeffding-Two-Populations} holds with constants that are uniform in time. As a direct consequence, Theorems~\ref{thm:Hoeffding-Fearnhead} and~\ref{th:exp:forward-backward} hold also with constants that are uniform in time.
+\end{enumerate}
+\end{rem}

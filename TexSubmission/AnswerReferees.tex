@@ -1,0 +1,132 @@
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,amsthm,mathrsfs,algorithm,enumerate,xargs}
+\usepackage{graphicx,color,framed}
+\usepackage{algpseudocode}
+\usepackage{graphicx,color,framed,gensymb,upgreek,twoopt,hyperref}
+\usepackage[textsize=footnotesize]{todonotes}
+\begin{document}
+
+\author{Thi Ngoc Minh Nguyen\footnote{LTCI, CNRS and T\'el\'ecom ParisTech.}\and Sylvain Le {C}orff\footnote{Laboratoire de Math\'ematiques d'Orsay, Univ. Paris-Sud, CNRS, Universit\'e Paris-Saclay.}\and Eric Moulines\footnote{Centre de Math\'ematiques Appliqu\'ees, Ecole Polytechnique.}}
+
+
+
+
+
+\title{On the two-filter approximations of marginal smoothing distributions in general state space models}
+
+\date{}
+
+\maketitle
+
+
+The authors are grateful to the associate editor and the anonymous referee for their comments to improve the manuscript. The paper has been carefully proof read to remove remaining typos and minor mistakes. We provide below detailed answers for all comments.
+
+
+\vspace{1cm}
+
+
+To the best of my knowledge this is the first time any analysis has appeared
+for these algorithms. In addition, the final conclusion related to the comparison
+of asymptotic variances agrees very well with intuition from applying these
+algorithms in practice. (In fact I am surprised that the authors do not highlight
+this earlier in the introduction or the abstract).
+
+\vspace{.5cm}
+
+{\em
+The fact that the asymptotic variance of two-filter algorithms may be estimated thanks to the results given in our paper and of [10,25] is now highlighted in the introduction.
+}
+
+
+\vspace{1cm}
+
+Last point in page 5: The comment can be a bit misleading. As far as the
+normalization of $\psi$ this is clear, but there are some dangers in choosing a $\gamma_t$ that is not integrable when the particle approximations are concerned.
+In [1] section 2.3 presents some guidelines on the choice of $\gamma_t$ and suggest
+avoiding a non-integrable choice. This could be perhaps related with the
+variance calculations in pages 15-16.
+
+\vspace{.5cm}
+
+{\em
+We agree that even if $\gamma_t$ may be chosen as a possibly improper prior its choice highly impacts the performance of two-filter algorithms. We added the following comment in the first paragraph of Section~2.2 of the revised version of the paper.
+
+"However, as noted in [1,~Section~2.3], the choice of $\gamma_t$ is likely to have a significant impact on the performance of all two-filter algorithms. The authors propose several sharp choices such as analytical approximations of the marginal distribution of $X_t$. An alternative with interesting practical results is to choose $\gamma_t$ as the approximation of the predictive distribution of $X_t$ given $(Y_{0},\ldots,Y_{t-1})$ obtained with the forward particle filter. On the other hand, Section~4 provides central limit theorems with explicit dependency on the sequence $\{\gamma_t\}_{t\ge 0}$ which could be used as a guideline for practical implementations in order to minimize the asymptotic variance."
+
+Note that although choosing $\gamma_t$ in order to minimize the asymptotic variance seems appealing, this is hardly realistic in a generic framework since the expression of this variance is complex.  
+}
+
+\vspace{1cm}
+
+Another point relates on providing a discussion of the context with other
+works such as [5] and [26]. It would be nice to include some comments
+on how the present results complement those in [5] and [26] in terms of
+the variance properties of $\mathcal{O}(N^2)$ methods and whether there are is any
+common ground in the analysis of [5].
+
+\vspace{.5cm}
+
+{\em
+Results provided in [5] ([6] in the revised paper) and [26] ([28] in the revised paper) are related to our work. First, [5] proposed an estimator of the likelihood of the observations using a two-filter decomposition. The author proposed an estimator with a complexity growing with $N^2$ and following the ideas of Fearnhead, Wyncoll and Tawn they provided an alternative estimator with $\mathcal{O}(N)$ complexity following the same steps as in our paper. The obtained particle based estimator is unbiased and the authors established a CLT, see Theorem~2.1 of [5]. This CLT is the sum of two contributions associated with the forward and backward particle filters as the CLT we establish for the marginal smoothing distributions. However, due to the complex dependency of the asymptotic variance on $\{\gamma_t\}_{t\ge 0}$, there is no general intuition in this result either to choose this sequence sharply. These results are now commented at the end of Section~4.
+
+In [26], the authors used a backward interpretation of the smoothing distributions to propose online estimates of smoothed additive functionals with a complexity of order $\mathcal{O}(N^2)$. They provided in particular exponential deviation inequalities and central limit theorems. As for all particle smoothers, the asymptotic variance is highly involved and a complete study of this variance is out of the scope of this paper which focuses on obtaining theoretical guarantees for two-filter based algorithms. We agree with the Referee that providing a general analysis of the asymptotic variances of all SMC smoothing algorithms would be relevant and of practical interest, especially with the recent works of [10] and [25] to provide consistent estimates. This is the focus of ongoing works.
+}
+
+
+\vspace{1cm}
+
+About the organization of the material in section 2: The part starting
+at the second half of page 8 and finishing just before 2.4 could be moved
+earlier to allow for the $O(N)$ and $O(N^2)$ methods to be treated separately.
+The current presentation can be a bit confusing.
+
+\vspace{.5cm}
+
+{\em
+We modified Section~2.3 according to this remark. First, Section~2.4 was removed. In the revised paper, Section~2.3.1 introduces the two-filter algorithm of Fearnhead, Wyncoll and Tawn. We first provide the generic implementation of their algorithm and then the mechanism introduced in [14] to obtain a method with $\mathcal{O}(N)$ complexity. Section~2.3.2
+now introduces the two-filter algorithm of Briers, Doucet, Maskell.}
+
+\vspace{1cm}
+
+Also in section 3 \& 4 often the authors refer to quantities in the appendix
+( e.g. Remark 3.1 (i) or decompositions in (27)-(28) in p. 14 could be
+presented after Theorem 4.2).
+
+\vspace{.5cm}
+
+{\em
+It was indeed awkward to refer to quantities defined in the appendix to comment Theorem~4.3. As these decompositions, previously given in (27-28), are crucial to explain the link between forward and backward weighted samples and the two-filter approximations of Briers, Doucet, Maskell, they are now given before Theorem~4.3. 
+
+On the other hand, the remarks refer also to the results given in Appendices~A and~B which provide known results on the convergence of particle filters. These results are displayed here only for completeness and we decided to keep them as appendices to avoid confusion in the main part of the paper.
+}
+
+\vspace{1cm}
+
+I would suggest citing also earlier papers on the method such as the paper
+by Bresler (Bresler, Y. (1986). Two-filter formula for discrete-time
+non-linear Bayesian smoothing. International Journal of Control. As well as Kitagawa, G. (1994). The two-filter formula for
+smoothing and an implementation of the Gaussian-sum smoother. Annals
+of the Institute of Statistical Mathematics.
+
+\vspace{.5cm}
+
+{\em
+References to both papers were added to introduce the two-filter decomposition in the introduction. 
+}
+
+\vspace{1cm}
+
+My impression is that in order to allow a single treatment of all methods,
+the notation became quite cumbersome. This just a remark and it is
+common in articles on particle filters, and I am afraid I do not have any
+suggestions on how to improve in this direction.
+
+\vspace{.5cm}
+
+{\em
+As mentioned by the Referee, cumbersome notations are somehow common in the particle filter literature. The paper aims at providing theoretical results for all two-filter methods and we believe that using different notations for each specific implementation improves the clarity of its content.
+}
+
+\end{document} 
