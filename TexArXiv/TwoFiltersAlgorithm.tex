@@ -1,0 +1,166 @@
+\label{sec:TwoFilters}
+For any measurable function $h$ on $\Xset^{t-s+1}$, probability distribution $\chi$ on $(\Xset,\sigmaX)$, $T\geq 0$ and $0 \leq s \leq t \leq T$, define the joint smoothing distribution by:
+\begin{equation}
+\label{eq:smooth}
+\post[\Xinit]{s:t}{T}[h] \eqdef \frac{\int \chi(\rmd x_0)g_{0}(x_0)\prod_{u=1}^{T}Q(x_{u-1},\rmd x_u)g_{u}(x_u)h(x_{s:t})}{\int \chi(\rmd x_0)g_{0}(x_0)\prod_{u=1}^{T}Q(x_{u-1},\rmd x_u)g_{u}(x_u)}\eqsp,
+\end{equation}
+where  $a_{u:v}$ is a short-hand notation for $\{a_s\}_{s=u}^{v}$. In the following we use the notations $\post[\Xinit]{s}{T}\eqdef \post[\Xinit]{s:s}{T}$ and $\filt{\Xinit,t}\eqdef \post[\Xinit]{t:t}{t}$. The aim of this paper is to provide a rigorous analysis of the performance of SMC algorithms approximating the sequence $\post[\Xinit]{s}{T}$ for $0\le s\le T$. The algorithms analyzed in this paper are based on the {\em two-filter formula} introduced in \cite{briers:doucet:maskell:2010,fearnhead:wyncoll:tawn:2010}, which we now detail.
+\subsection{Forward filter}
+Let $\{\epart{0}{\ell}\}_{\ell = 1}^N$ be \iid\ and  distributed according to the instrumental distribution $\rho_0$ and define the importance weights
+\[
+\ewght{0}{\ell} \eqdef \frac{\rmd \Xinit}{\rmd \XinitIS{0}}(\epart{0}{\ell}) \, g_{0}(\epart{0}{\ell})\eqsp.
+\]
+For any  $h\in \functionset[b]{X}$,
+\[
+\filt{\Xinit,0}^N[h]\eqdef \sumwght{0}^{-1}\sum_{\ell=1}^N \ewght{0}{\ell}h(\epart{0}{\ell})\eqsp,\quad\mbox{where}\quad\sumwght{0}\eqdef \sum_{\ell=1}^N \ewght{0}{\ell}\eqsp,
+\]
+is a consistent estimator of $\filt{\Xinit,0}[h]$, see for instance \cite{delmoral:2004}. Then, based on $\{(\epart{s-1}{\ell},\ewght{s-1}{\ell})\}_{\ell=1}^N$ a new set of particles and importance weights is obtained using the auxiliary sampler introduced in \cite{pitt:shephard:1999}. Pairs $\{ (I_s^{\ell}, \epart{s}{\ell}) \}_{\ell = 1}^N$ of indices and particles are simulated independently from the instrumental distribution with density on $\{1, \dots, N\} \times \Xset$:
+\begin{equation} 
+\label{eq:instrumental-distribution-filtering}
+\instrpostaux{s}{s}(\ell,x) \propto \ewght{s-1}{\ell} \adjfuncforward{s}(\epart{s-1}{\ell}) \kissforward{s}{s}(\epart{s-1}{\ell},x) \eqsp,
+\end{equation}
+where $\adjfuncforward{s}$ is the adjustment multiplier weight function and $\kissforward{s}{s}$ is a Markovian transition density. For any  $\ell \in\{1, \dots, N\}$, $\epart{s}{\ell}$ is associated with the  importance weight defined by:
+\begin{equation}
+\label{eq:weight-update-filtering}
+    \ewght{s}{\ell} \eqdef \frac{q(\epart{s-1}{I_s^{\ell}},\epart{s}{\ell}) g_{s}(\epart{s}{\ell})}{\adjfuncforward{s}(\epart{s-1}{I_s^{\ell}}) \kissforward{s}{s}(\epart{s-1}{I_s^{\ell}},\epart{s}{\ell})}
+\end{equation}
+to produce the following approximation of $\filt{\Xinit,s}[h]$:
+\[
+\filt{\Xinit,s}^N[h]\eqdef \sumwght{s}^{-1}\sum_{\ell=1}^N \ewght{s}{\ell}h(\epart{s}{\ell})\eqsp,\quad \mbox{where}\quad \sumwght{s}\eqdef \sum_{\ell=1}^N \ewght{s}{\ell}\eqsp.
+\]
+\subsection{Backward filter}
+Let $\{\gamma_t\}_{t \geq 0}$ be a family of positive measurable functions such that, for all $t\in \{0, \ldots, T\}$,
+\begin{equation}\label{eq:defGamma}
+\int \gamma_t(x_t) \, \rmd x_t \left[\prod_{u = t+1}^T g_{u-1}(x_{u-1}) \, Q(x_{u-1}, \rmd x_u) \right] g_T(x_T) < \infty \eqsp.
+\end{equation}
+Following \cite{briers:doucet:maskell:2010}, for any $0\le t\le T$ we introduce the backward filtering distribution $\backDist[][\gamma]{t}{T}$ on $\sigmaX$ (referred to as the  \emph{backward information filter} in \cite{kitagawa:1996} and \cite{briers:doucet:maskell:2010}) defined, for any $h\in \functionset[b]{X}$, by:
+\[
+\backDist[][\gamma]{t}{T}[h] \eqdef \\
+\frac{\int \gamma_t(x_t) \, \rmd x_t\left[\prod_{u=t+1}^T g_{u-1}(x_{u-1}) \, Q(x_{u-1},\rmd x_u)\right] g_T(x_T) h(x_t)}{\int \gamma_t(x_t) \, \rmd x_t \left[ \prod_{u=t+1}^T g_{u-1}(x_{u-1}) \, Q(x_{u-1},\rmd x_u )\right] g_T(x_T)} \eqsp.
+\]
+If the distribution of $X_t$ has probability density function $\gamma_t$, then $\backDist[][\gamma]{t}{T}$ is the conditional distribution of $X_t$ given $\chunk{Y}{t}{T}$.  Contrary to \cite{briers:doucet:maskell:2010} or \cite{fearnhead:wyncoll:tawn:2010}, $\int \gamma_t(x_t)\rmd x_t$ may be infinite. The only requirement about the nonnegative functions $\{\gamma_t\}_{t\geq 0}$ is the condition \eqref{eq:defGamma} and the fact that $\gamma_t$ should be available in closed form. Here $\gamma_t$ is a possibly improper prior introduced to make $\backDist[][\gamma]{t}{T}$ a proper posterior distribution, which is of key importance when producing particle approximations of such quantities.
+For $0\le t \le T-1$, the backward information filter is computed by the recursion
+\begin{equation}
+\label{eq:recurBack}
+\backDist[][\gamma]{t}{T}[h]\propto \int \backDist[][\gamma]{t+1}{T}(\rmd x_{t+1})\left[\gamma_t(x_t) g_t(x_t) \frac{q(x_t,x_{t+1})}{\gamma_{t+1}(x_{t+1})} \right] h(x_t) \, \rmd x_t \eqsp, 
+\end{equation}
+in the backward time direction. \eqref{eq:recurBack} is analogous to the forward filter recursion and particle approximations of the backward information filter can be obtained similarly.
+Using the definition of the forward filtering distribution at time $s - 1$ and the backward information filter at time $s + 1$, the marginal smoothing distribution may be expressed as
+\begin{equation}
+\label{eq:filtBackfilt}
+\post[\Xinit]{s}{T}[h]  \propto \int \filt{\Xinit,s-1}(\rmd x_{s-1}) \backDist[][\gamma]{s+1}{T}(\rmd x_{s+1})q(x_{s-1},x_s) g_s(x_s) \frac{q(x_s,x_{s+1})}{\gamma_{s+1}(x_{s+1})} h(x_s) \rmd x_s \eqsp.
+\end{equation}
+ We now describe the Sequential Monte Carlo methods used to approximate the recursion \eqref{eq:recurBack} in \cite{briers:doucet:maskell:2010}, \cite{fearnhead:wyncoll:tawn:2010}.
+Let $\ebackinit_T$ be an instrumental probability density on $\Xset$ and $\{\ebackpart{T}{T}{i}\}_{i=1}^N$ be i.i.d. random variables such that $\ebackpart{T}{T}{i}\sim\ebackinit_T$ and define
+\[
+\ebackwght{T}{T}{i} \eqdef \frac{g_T(\ebackpart{T}{T}{i})\gamma_T(\ebackpart{T}{T}{i})}{\ebackinit_T(\ebackpart{T}{T}{i})}\eqsp.
+\]
+Let now $\{ (\ebackpart{t+1}{T}{i},\ebackwght{t+1}{T}{i}) \}_{i=1}^N$ be a weighted sample targeting the backward information filter distribution $\backDist[][\gamma]{t+1}{T}[h]$  at time $t+1$:
+\[
+\backDist[][\gamma]{t+1}{T}^N[h] \eqdef \backsumwght{t+1}{T}^{-1} \sum_{i=1}^N \ebackwght{t+1}{T}{i}h(\ebackpart{t+1}{T}{i})\eqsp,\quad\mbox{where}\quad\backsumwght{t+1}{T} \eqdef \sum_{i=1}^N \ebackwght{t+1}{T}{i}\eqsp.
+\]
+Plugging this approximation into \eqref{eq:recurBack} yields the target probability density
+\begin{equation*}
+\backDist[tar][\gamma]{t}{T}(x_t)\propto \sum_{i=1}^N \ebackwght{t+1}{T}{i} \left[\gamma_t(x_t) g_t(x_t) \frac{q(x_t,\ebackpart{t+1}{T}{i})}{\gamma_{t+1}(\ebackpart{t+1}{T}{i})} \right] \eqsp,
+\end{equation*}
+which is the marginal probability density function of  $x_t$ of the joint  density
+\begin{equation*}
+\backDist[aux][\gamma]{t}{T} ((i, x_t) \propto \frac{\ebackwght{t+1}{T}{i}}{\gamma_{t+1}(\ebackpart{t+1}{T}{i})} \gamma_t(x_t) g_t(x_t) q(x_t, \ebackpart{t+1}{T}{i}) \eqsp.
+\end{equation*}
+A particle approximation of the backward information filter at time $t$ can be derived by choosing an adjustment weight function $\adjfunc{t}{T}{}$ and an instrumental density kernel $\kiss{t}{T}$, and simulating $\{ (\check{I}^i_t, \ebackpart{t}{T}{i}) \}_{i=1}^N$ from
+the instrumental probability density on $\{1,\ldots,N\}\times\Xset$ given by
+\begin{equation}
+\label{eq:ebackparticle-update-backward-filtering}
+\instrpostaux{t}{T}(i,x_t)\propto  \frac{\ebackwght{t+1}{T}{i} \adjfunc{t}{T}{\ebackpart{t+1}{T}{i}}}{\gamma_{t+1}(\ebackpart{t+1}{T}{i})} \kiss{t}{T}(\ebackpart{t+1}{T}{i},x_t) \eqsp.
+\end{equation}
+Subsequently, the particles are associated with the importance weights
+\begin{equation}
+\label{eq:ebackweight-update-backward-filtering}
+\ebackwght{t}{T}{i} \eqdef \frac{\gamma_t(\ebackpart{t}{T}{i}) g_t(\ebackpart{t}{T}{i}) q(\ebackpart{t}{T}{i},\ebackpart{t+1}{T}{\check{I}^i_t})}{\adjfunc{t}{T}{\ebackpart{t+1}{T}{\check{I}^i_t}} \kiss{t}{T}(\ebackpart{t+1}{T}{\check{I}^i_t}, \ebackpart{t}{T}{i})} \eqsp.
+\end{equation}
+Ideally, a fully adapted version of the auxiliary backward information filter is obtained by using the adjustment weights $\adjfunc[fully]{t}{T}{x}=  \int \gamma_t(x_t) g_t(x_t) q(x_t,x) \, \rmd x_t $ and the proposal kernel density
+\[
+\kiss[fully]{t}{T}(x, x_t)=\gamma_t(x_t) g_t(x_t) \frac{q(x_t,x)}{\adjfunc[fully]{t}{T}{x}} \eqsp,
+\]
+yielding uniform importance weights. Such a solution is most likely to be cumbersome from a computational perspective.
+
+\subsection{Two-filter approximations of the marginal smoothing distributions}
+Plugging the particle approximations of the forward and backward filter distributions into \eqref{eq:filtBackfilt} provides the following mixture approximation of the smoothing distribution:
+\begin{equation}
+\label{eq:definition-smoothing-target}
+\post[\Xinit][tar]{s}{T}(x_s) \propto \sum_{i=1}^N \sum_{j=1}^N \frac{\ewght{s-1}{i} \ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})}  q(\epart{s - 1}{i},x_s) g_s(x_s) q(x_s, \ebackpart{s+1}{T}{j}) \eqsp.
+\end{equation}
+Following the $\fwt$ algorithm of Fearnhead, Wyncoll and Tawn \cite{fearnhead:wyncoll:tawn:2010}, the probability density \eqref{eq:definition-smoothing-target} might be seen as
+the marginal density of $x_s$ obtained from the joint density on the product space $\{1,\dots,N\}^2 \times \Xset$ given by
+\begin{equation}
+\label{eq:definition-smoothing-auxiliary}
+\post[\chi][\aux]{s}{T}(i,j, x_s) \propto \frac{\ewght{s-1}{i} \ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})} q(\epart{s-1}{i},x_s) g_s(x_s) q(x_s,\ebackpart{s+1}{T}{j})\eqsp.
+\end{equation}
+The $\fwt$ algorithm draws a set $\{(I_{s}^\ell,\check{I}_{s}^\ell,\smpart{s}{T}{\ell}) \}_{\ell=1}^N$ of indices and particle positions from the instrumental density
+\begin{equation}
+\label{eq:auxiliary-proposal-smoothing}
+\instrpostaux{s}{T}(i,j,x_s) \propto  \frac{\ewght{s-1}{i} \adjfunc[smooth]{s}{T}{\epart{s-1}{i},\ebackpart{s+1}{T}{j}} \ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})} \kiss[smooth]{s}{T}(\epart{s-1}{i},\ebackpart{s+1}{T}{j}; x_s)\eqsp,
+\end{equation}
+where, as above, $\adjfunc[smooth]{s}{T}{x,x'}$ is an adjustment multiplier weight function (which now depends on the forward and backward particles) and $\kiss[smooth]{s}{T}$ is an instrumental kernel. We then associate with each draw $(I_{s}^\ell,\check{I}_{s}^\ell, \smpart{s}{T}{\ell})$ the importance weight
+\begin{equation}
+\label{eq:weight-fearnhead}
+\smwght{s}{T}{\ell} \eqdef \frac{q(\epart{s-1}{I_{s}^\ell},\smpart{s}{T}{\ell}) g_s(\smpart{s}{T}{\ell}) q(\smpart{s}{T}{\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell})}{\adjfunc[smooth]{s}{T}{\epart{s-1}{I_{s}^\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell}}
+\kiss[smooth]{s}{T}(\epart{s-1}{I_{s}^\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell}; \smpart{s}{T}{\ell})}\eqsp,\quad \tilde{\Omega}_{s|T}\eqdef \sum_{\ell=1}^N\smwght{s}{T}{\ell}  \eqsp.
+\end{equation}
+Then, the auxiliary indices $\{(I_{s}^\ell,\check{I}_{s}^\ell)\}_{\ell=1}^N$ are discarded and $\{ (\smwght{s}{T}{\ell},\smpart{s}{T}{\ell}) \}_{\ell=1}^N$ approximate the target smoothing density $\post[\Xinit][tar]{s}{T}$. Mimicking the arguments in \cite{huerzeler:kunsch:1998} and further developed in \cite{kuensch:2005}, the auxiliary particle filter is fully adapted if the adjustment weight function is $\adjfunc[fully]{s}{T}{x,x'} = \int q(x,x_s) g_s(x_s) q(x_s,x') \, \rmd x_s$ and the instrumental kernel is
+\[
+\kiss[fully]{s}{T}\left(x,x'; x_s\right) = q(x,x_s) g_s(x_s) q(x_s,x')/\adjfunc[fully]{s}{T}{x,x'}\eqsp.
+\]
+ Except in simple scenarios, simulating from the fully adapted auxiliary filter is computationally intractable.
+
+Instead of considering the target distribution \eqref{eq:definition-smoothing-target} as the marginal of the auxiliary distribution \eqref{eq:definition-smoothing-auxiliary}
+over pairs of indices, the $\bdm$ algorithm of  \cite{briers:doucet:maskell:2010} uses the following \emph{partial} auxiliary distributions having densities,
+\begin{align*}
+& \post[][\aux,\mathrm{f}]{s}{T}(i,x_s) \propto  \ewght{s-1}{i} q(\epart{s-1}{i}, x_s) g_s(x_s) \sum_{j=1}^N \frac{\ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})} q(x_s, \ebackpart{s+1}{T}{j}) \eqsp,\\
+& \post[][\aux, \mathrm{b}]{s}{T}(j,x_s) \propto  \frac{\ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})} q(x_s, \ebackpart{s+1}{T}{j}) g_s(x_s) \sum_{i=1}^N \ewght{s-1}{i} q(\epart{s-1}{i},x_s) \eqsp.
+\end{align*}
+Since $\post[\Xinit][tar]{s}{T}$ is the marginal probability density of the partial auxiliary distributions $\post[][\aux,\mathrm{f}]{s}{T}$ and $\post[][\aux,\mathrm{b}]{s}{T}$ with respect to the forward and the backward particle indices, respectively, we may sample from $\post[\Xinit][tar]{s}{T}$ by simulating instead $\{(I_s^\ell,\epart{s}{\ell}) \}_{\ell=1}^N$ or $\{(\check{I}_{s}^\ell,\ebackpart{s}{T}{\ell}) \}_{\ell=1}^N$ from the instrumental probability density functions
+\begin{align*}
+&\instrpostaux{s}{T}^{\mathrm{f}}(i,x_s) \propto  \ewght{s-1}{i} \adjfuncforward{s}(\epart{s-1}{i}) \kissforward{s}{s}(\epart{s-1}{i}, x_s) \eqsp, \\
+&\instrpostaux{s}{T}^{\mathrm{b}}(j,x_s) \propto  \adjfunc{s}{T}{\ebackpart{s+1}{T}{j}} \ebackwght{s+1}{T}{j} \kiss{s}{T}(\ebackpart{s+1}{T}{j}, x_s)/\gamma_{s+1}(\ebackpart{s+1}{T}{j}) \eqsp,
+\end{align*}
+where $(\adjfuncforward{s},\kissforward{s}{s})$ and $(\adjfunc{s+1}{T}{},\kiss{s}{T})$ are the adjustment multiplier weight functions and the instrumental kernels used in the forward and backward passes. In this case the algorithm uses the particles obtained when approximating the forward filter and backward information filter to provide two different weighted samples
+$\{ (\smwght{s}{T}{i,\mathrm{f}}, \epart{s}{i}) \}_{i=1}^N$ and $\{ (\smwght{s}{T}{i,\mathrm{b}}, \ebackpart{s}{T}{i}) \}_{i=1}^N$ targeting the marginal smoothing distribution, where the
+\emph{forward} $\{ \smwght{s}{T}{i, \mathrm{f}} \}_{i=1}^N$ and \emph{backward} $\{ \smwght{s}{T}{i, \mathrm{b}} \}_{i=1}^N$ importance weights are given by
+\begin{align}
+\label{eq:definition-smoothing-weight-forward}
+&\smwght{s}{T}{i, \mathrm{f}} \eqdef \ewght{s}{i} \sum_{j=1}^N \ebackwght{s+1}{T}{j} q(\epart{s}{i},\ebackpart{s+1}{T}{j})/\gamma_{s+1}(\ebackpart{s+1}{T}{j})\eqsp,\quad \tilde{\Omega}^{\mathrm{f}}_{s|T}\eqdef\sum_{j=1}^N \smwght{s}{T}{j, \mathrm{f}}\eqsp, \\
+\label{eq:definition-smoothing-weight-backward}
+&\smwght{s}{T}{j, \mathrm{b}} \eqdef \ebackwght{s}{T}{j} \sum_{i=1}^N \ewght{s-1}{i} q(\epart{s-1}{i},\ebackpart{s}{T}{j})/\gamma_{s}(\ebackpart{s}{T}{j})\eqsp,\quad \hspace{.8cm}\tilde{\Omega}^{\mathrm{b}}_{s|T}\eqdef\sum_{j=1}^N \smwght{s}{T}{j, \mathrm{b}} \eqsp.
+\end{align}
+An important drawback of these algorithms is that the computation of the forward and backward importance weights grows quadratically with the number $N$ of particles.
+
+\subsection{$\mathcal{O}(N)$ approximations of the marginal smoothing distributions}
+In \cite{fearnhead:wyncoll:tawn:2010}, the authors introduced a proposal mechanism in \eqref{eq:auxiliary-proposal-smoothing} such that the indices $(I_{s},\check{I}_{s})$ of the forward and backward particles chosen at time $s-1$ and $s+1$ are sampled independently.  Such choices lead to algorithms whose complexity grows linearly with the number of particles. The $\mathcal{O}(N)$ algorithm displayed in  \cite{fearnhead:wyncoll:tawn:2010} suggests to use an adjustment multiplier weight function in \eqref{eq:auxiliary-proposal-smoothing} such that $I_{s}$ and $\check{I}_{s}$ are chosen according to the same distributions as the indices sampled in the forward filter and in the backward information filter. It is done in \cite{fearnhead:wyncoll:tawn:2010} by choosing $\adjfunc[smooth]{s}{T}{x,x'} = \adjfuncforward{s}(x)\adjfunc{s}{T}{x'}$ so that \eqref{eq:auxiliary-proposal-smoothing} becomes
+\begin{equation}
+\label{eq:inst-fearnhead:linear}
+\instrpostaux{s}{T}(i,j,x_s) \propto  \ewght{s-1}{i}\adjfuncforward{s}(\epart{s-1}{i}) \frac{\adjfunc{s}{T}{\ebackpart{s+1}{T}{j}} \ebackwght{s+1}{T}{j}}{\gamma_{s+1}(\ebackpart{s+1}{T}{j})} \kiss[smooth]{s}{T}(\epart{s-1}{i},\ebackpart{s+1}{T}{j}; x_s)\eqsp.
+\end{equation}
+In this case, the importance weight \eqref{eq:weight-fearnhead} associated with each draw $(I_{s}^\ell,\check{I}_{s}^\ell, \smpart{s}{T}{\ell})$ is given by
+\begin{equation}
+\label{eq:weight-fearnhead:linear}
+\smwght{s}{T}{\ell} \eqdef \frac{q(\epart{s-1}{I_{s}^\ell},\smpart{s}{T}{\ell}) g_s(\smpart{s}{T}{\ell}) q(\smpart{s}{T}{\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell})}{\adjfuncforward{s}(\epart{s-1}{I_{s}^\ell})\adjfunc{s}{T}{\ebackpart{s+1}{T}{\check{I}_{s}^\ell}}
+\kiss[smooth]{s}{T}(\epart{s-1}{I_{s}^\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell}; \smpart{s}{T}{\ell}) } \eqsp.
+\end{equation}
+Instead of sampling new particles at time $s$,  an algorithm similar to the $\bdm$ algorithm of  \cite{briers:doucet:maskell:2010} which uses  the forward particles $\{\epart{s}{\ell}\}_{\ell=1}^N$ or backward particles $\{\ebackpart{s}{T}{\ell}\}_{\ell=1}^N$ may also be implemented with an $\mathcal{O}(N)$ computational complexity. 
+\begin{enumerate}[(a)]
+\item Choosing $\kiss[smooth]{s}{T}(\epart{s-1}{I_{s}^\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell}; x_s) = \kiss{s}{T}(\ebackpart{s+1}{T}{\check{I}_{s}^\ell}, x_s)$ in \eqref{eq:inst-fearnhead:linear}, 
+the smoothing distribution approximation is obtained by reweighting the particles obtained in the backward pass. The backward particles $\{\ebackpart{s}{T}{\ell}\}_{\ell=1}^N$ are associated with the importance weights:
+\begin{align}
+\nonumber
+\smwght{s}{T}{\ell} &\eqdef \frac{ \gamma_s(\ebackpart{s}{T}{\ell})g_s(\ebackpart{s}{T}{\ell}) q(\ebackpart{s}{T}{\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell})}{\adjfunc{s}{T}{\ebackpart{s+1}{T}{\check{I}_{s}^\ell}}
+\kiss{s}{T}(\ebackpart{s+1}{T}{\check{I}_{s}^\ell}, \ebackpart{s}{T}{\ell})} \frac{q(\epart{s-1}{I_{s}^\ell},\ebackpart{s}{T}{\ell})}{\gamma_s(\ebackpart{s}{T}{\ell})\adjfuncforward{s}(\epart{s-1}{I_{s}^\ell})}\eqsp,\\
+&= \ebackwght{s}{T}{\ell}\frac{q(\epart{s-1}{I_{s}^\ell},\ebackpart{s}{T}{\ell})}{\gamma_s(\ebackpart{s}{T}{\ell})\adjfuncforward{s}(\epart{s-1}{I_{s}^\ell})}\eqsp.\label{eq:weight-bdm:linear:bkd}
+\end{align}
+\item Choosing $\kiss[smooth]{s}{T}(\epart{s-1}{I_{s}^\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell}; x_s) = \kissforward{s}{s}(\epart{s-1}{I_{s}^\ell}, x_s)$ in \eqref{eq:inst-fearnhead:linear}, the smoothing distribution approximation is obtained by reweighting the particles obtained in the forward filtering pass. The forward particles $\{\epart{s}{\ell}\}_{\ell=1}^N$ are associated with the importance weights:
+\begin{equation}
+\label{eq:weight-bdm:linear:fwd}
+\smwght{s}{T}{\ell} \eqdef \frac{q(\epart{s-1}{I_{s}^\ell},\epart{s}{\ell}) g_s(\epart{s}{\ell}) }{\adjfuncforward{s}(\epart{s-1}{I_{s}^\ell})
+\kissforward{s}{s}(\epart{s-1}{I_{s}^\ell}, \epart{s}{\ell}) } \frac{q(\epart{s}{\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell})}{\adjfunc{s}{T}{\ebackpart{s+1}{T}{\check{I}_{s}^\ell}}} =  \ewght{s}{\ell}\frac{q(\epart{s}{\ell},\ebackpart{s+1}{T}{\check{I}_{s}^\ell})}{\adjfunc{s}{T}{\ebackpart{s+1}{T}{\check{I}_{s}^\ell}}}\eqsp.
+\end{equation}
+\end{enumerate}

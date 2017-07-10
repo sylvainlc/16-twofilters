@@ -1,0 +1,533 @@
+\documentclass{article}
+
+\usepackage[latin1]{inputenc}
+\usepackage{amsmath,amssymb,amsfonts,latexsym,amsthm,mathrsfs,algorithm,enumerate,xargs}
+\usepackage{graphicx,color,framed}
+\usepackage{algpseudocode}
+\usepackage{graphicx,color,framed,gensymb,upgreek,twoopt,hyperref}
+\usepackage[textsize=footnotesize]{todonotes}
+
+\newcommand{\rmL}{\mathrm{L}}
+\def\sigmaX{\mathcal{X}}
+\def\sigmaY{\mathcal{Y}}
+
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+
+\newcommand{\note}[2]{\marginpar{\textcolor{blue}{#1} \color{red}\footnotesize{ #2}\color{black}}}
+
+\newcommand{\mcg}[2][]{
+\ifthenelse{\equal{#1}{}}{{\mathcal{G}_{#2}}}{\mathcal{G}_{#2}^{(#1)}}
+}
+\newcommand{\mcf}[2][]{
+\ifthenelse{\equal{#1}{}}{{\mathcal{F}_{#2}}}{\mathcal{F}_{#2}^{(#1)}}
+}
+\newcommand{\mctf}[2][]{
+\ifthenelse{\equal{#1}{}}{\widetilde{\mathcal{F}}_{#2}}{\widetilde{\mathcal{F}}_{#2}^{(#1)}}
+}
+\newcommand{\mcbf}[2][]{
+\ifthenelse{\equal{#1}{}}{\overline{\mathcal{F}}_{#2}}{\overline{\mathcal{F}}_{#2}^{(#1)}}
+}
+
+\newcommand{\adjfuncforward}[1]{\vartheta_{#1}}
+\newcommand{\kissforward}[3][]
+{\ifthenelse{\equal{#1}{}}{p_{#2}}
+{\ifthenelse{\equal{#1}{fully}}{p^{\star}_{#2}}
+{\ifthenelse{\equal{#1}{smooth}}{\tilde{r}_{#2}}{\mathrm{erreur}}}}}
+
+\newcommand{\fup}[2]{\overline{#1}_{#2}}
+\newcommand{\fdown}[2]{\underline{#1}_{#2}}
+
+\newcommand{\etal}{et al.}
+\newcommand{\wrt}{with respect to}
+\newcommand{\bdm}{\mathsf{TwoFilt}_{bdm}}
+\newcommand{\fwt}{\mathsf{TwoFilt}_{fwt}}
+\newcommand{\fwtfb}{\mathsf{TwoFilt}_{fwt-fb}}
+\newcommand{\rhs}{RHS}
+\newcommand{\lhs}{LHS}
+\newcommand{\iid}{i.i.d.}
+\newcommand{\as}{a.s.}
+\newcommand{\mae}{a.e.}
+\newcommand{\ie}{i.e.}
+\newcommand{\eg}{e.g.}
+\newcommand{\cf}{cf.}
+\newcommand{\pdf}{probability density function}
+\newcommand{\eqsp}{\;}
+
+\newcommand{\rset}{\ensuremath{\mathbb{R}}}
+\newcommand{\nset}{\ensuremath{\mathbb{N}}}
+\newcommand{\zset}{\ensuremath{\mathbb{Z}}}
+\newcommand{\lone}{\ensuremath{\mathsf{L}^1}}
+\newcommand{\ltwo}{\ensuremath{\mathsf{L}^2}}
+\newcommand{\lp}{\ensuremath{\mathrm{L}^p}}
+
+\newcommand{\scalprod}[2]{\ensuremath{\langle #1, #2 \rangle}}
+\newcommand{\1}{\ensuremath{\mathbf{1}}}
+\newcommand{\argmin}{\ensuremath{\operatorname{arg\,min}}}
+\newcommand{\argmax}{\ensuremath{\operatorname{arg\,max}}}
+\newcommand{\eqdef}{\ensuremath{:=}}
+\newcommand{\card}[1]{\ensuremath{|#1|}}
+\newcommand{\tvnorm}[1]{\ensuremath{\left\|#1\right\|_{\mathrm{TV}}}}
+\newcommand{\tvnormsmall}[1]{\ensuremath{\|#1\|_{\mathrm{TV}}}}
+\newcommand{\rmd}{\ensuremath{\mathrm{d}}}
+\newcommand{\rmi}{\ensuremath{\mathrm{i}}}
+\newcommand{\bckdliklihood}{\ensuremath{\mathrm{c}}}
+\newcommand{\bckdfilt}{\ensuremath{\mathcal{F}}}
+
+
+\newcommand{\rme}{\ensuremath{\mathrm{e}}}
+\newcommand{\mcb}[1]{\ensuremath{\mathbb{B}_{\mathrm{b}}(#1)}}
+\newcommand{\mcp}[1]{\ensuremath{\mathcal{F}_{+}\left(#1\right)}}
+\newcommand{\supnorm}[1]{\ensuremath{\left|#1\right|_{\infty}}}
+\newcommand{\esssup}[2][]
+{\ifthenelse{\equal{#1}{}}{\left| #2 \right|_\infty}{\left| #2 \right|^2_{\infty}}}
+\newcommand{\oscnorm}[2][]
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\operatorname{osc}\left(#2\right)}}{\ensuremath{\operatorname{osc}^{#1}\!\left(#2\right)}}}
+\newcommand{\essosc}[3][]
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\operatorname{osc}_{#2}{\left(#3\right)}}}{\ensuremath{\operatorname{osc}^{#1}_{#2}\left(#3\right)}}}
+
+\newcommand{\partfrac}[1]{\left\langle #1 \right\rangle}
+\newcommand{\partent}[1]{\left \lfloor #1 \right \rfloor}
+
+
+\def\smooth{\scriptstyle{\mathrm{s}}}
+\def\aux{{\scriptstyle{\mathrm{aux}}}}
+\def\ini{{\scriptstyle{\mathrm{ini}}}}
+\newcommand\PVarF[2]{\PVar \left[ \left. #1 \right| #2 \right]}
+\def\LTAR{L}
+\def\consistweight{\ensuremath{\mathsf{W}}}
+\def\consistfunc{\ensuremath{\mathsf{C}}}
+\def\asnormfunc{\ensuremath{\mathsf{A}}}
+\def\stdnormfunc{\sigma}
+\usepackage{ifthen}
+\newboolean{sv_used}
+\setboolean{sv_used}{true}
+\usepackage{amsthm}
+
+\newtheorem{assumptionA}{\textbf{A}\hspace{-3pt}}
+\newtheorem{assumptionmix}{\textbf{H}\hspace{-3pt}}
+  \newtheorem{thm}{Theorem}
+  \newtheorem{prop}[thm]{Proposition}
+  \newtheorem{cor}[thm]{Corollary}
+  \newtheorem{lem}[thm]{Lemma}
+  \newtheorem{defi}{Definition}
+  \newtheoremstyle{assumption}
+  {6pt}
+  {6pt}
+  {}
+  {-.7em}
+  {\bfseries}
+  {.}
+  {0.1em}
+  {}
+  \theoremstyle{assumption}
+  \newtheorem{assum}{A}
+\newtheorem{assumSMC}{M}
+
+\theoremstyle{definition}\newtheorem{rem}{Remark}
+
+
+\newcommand{\PP}{\ensuremath{\mathbb{P}}}
+\newcommand{\PE}{\ensuremath{\mathbb{E}}}
+\newcommand{\CPE}[3][]
+{\ifthenelse{\equal{#1}{}}{\mathbb{E}\left[\left. #2 \, \right| #3 \right]}{\mathbb{E}_{#1}\left[\left. #2 \, \right| #3 \right]}}
+\newcommand{\CPP}[3][]
+{\ifthenelse{\equal{#1}{}}{\mathbb{P}\left(\left. #2 \, \right| #3 \right)}{\mathbb{P}_{#1}\left(\left. #2 \, \right| #3 \right)}}
+\newcommand{\PVar}{\ensuremath{\operatorname{Var}}}
+\newcommand{\CPVar}[2]{\ensuremath{\operatorname{Var}\left(\left. #1 \, \right| #2 \right)}}
+\newcommand{\PCov}{\ensuremath{\operatorname{Cov}}}
+\newcommand{\gauss}{\ensuremath{\operatorname{N}}}
+\newcommand{\cauchy}{\ensuremath{\operatorname{C}}}
+\newcommand{\lognorm}{\ensuremath{\operatorname{LN}}}
+\newcommand{\dirich}{\ensuremath{\operatorname{Dir}}}
+\newcommand{\negexp}{\ensuremath{\operatorname{Exp}}}
+\newcommand{\gam}{\ensuremath{\operatorname{Ga}}}
+\newcommand{\invgam}{\ensuremath{\operatorname{IG}}}
+\newcommand{\unif}{\ensuremath{\operatorname{U}}}
+\newcommand{\bin}{\ensuremath{\operatorname{Bin}}}
+\newcommand{\betad}{\ensuremath{\operatorname{Be}}}
+\newcommand{\poiss}{\ensuremath{\operatorname{Pn}}}
+\newcommand{\mult}{\ensuremath{\operatorname{Mult}}}
+\renewcommand{\mid}{\,|\,}
+\newcommand{\pscal}[2]{\left\langle #1, #2 \right\rangle}
+\newcommand{\ci}[4][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{#2 \perp\!\!\!\perp #3 \mid #4 }}{\ensuremath{#2 \perp\!\!\!\perp #3 \mid #4 \; \: [#1]}}%
+}
+
+\newcommand{\dlim}{\ensuremath{\stackrel{\mathcal{D}}{\longrightarrow}}}
+\newcommand{\plim}{\ensuremath{\stackrel{\mathrm{P}}{\longrightarrow}}}
+\newcommand{\aslim}{\ensuremath{\stackrel{\text{a.s.}}{\longrightarrow}}}
+
+\newcommand{\X}{\ensuremath{X}}
+\newcommand{\x}{\ensuremath{x}}
+\newcommand{\Xset}{\ensuremath{\mathsf{X}}}
+\newcommand{\epartset}{\ensuremath{\boldsymbol{\Xi}}}
+\newcommand{\epartsigma}{\ensuremath{\mathcal{B}(\boldsymbol{\Xi})}}
+\newcommand{\Xsigma}[1][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\mathcal{B}(\Xset)}}{\ensuremath{\mathcal{B}(\Xset^{#1})}}
+%
+}
+\newcommand{\tXisigma}{\ensuremath{\mathcal{B}(\tilde{\Xi})}}
+\newcommand{\Xchain}{\ensuremath{\{X_k\}_{k\geq 0}}}
+\newcommand{\Xchainshort}{\ensuremath{\{X_k\}}}
+\newcommand{\Xproc}{\ensuremath{\{X_k\}_{k\geq 0}}}
+\newcommand{\Xprocshort}{\ensuremath{\{X_k\}}}
+\newcommand{\Y}{\ensuremath{Y}}
+\newcommand{\y}{\ensuremath{y}}
+\newcommand{\Yset}{\ensuremath{\mathsf{Y}}}
+\newcommand{\Ysigma}{\ensuremath{\mathcal{B}(\Yset)}}
+\newcommand{\Yproc}{\ensuremath{\{Y_k\}_{k\geq 0}}}
+\newcommand{\Yprocshort}{\ensuremath{\{Y_k\}}}
+\newcommand{\Yprocone}{\ensuremath{\{Y_k\}_{k\geq 1}}} % for order chapter
+\newcommand{\XYchain}{\ensuremath{\{X_k,Y_k\}_{k\geq 0}}}
+\newcommand{\XYchainshort}{\ensuremath{\{X_k,Y_k\}}}
+\newcommand{\XYproc}{\ensuremath{\{X_k,Y_k\}_{k\geq 0}}}
+\newcommand{\XYprocshort}{\ensuremath{\{X_k,Y_k\}}}
+\newcommand{\chunk}[4][]%
+{\ifthenelse{\equal{#1}{}}{\ensuremath{{#2}_{#3:#4}}}{\ensuremath{#2^#1}_{#3:#4}}
+}
+% Model components
+% HMM representation
+\newcommand{\T}{\ensuremath{T}}
+\newcommand{\Tlow}{\ensuremath{t}}
+\newcommand{\Q}{\ensuremath{Q}}
+\newcommand{\q}{\ensuremath{q}}
+\newcommand{\Xinit}{\ensuremath{\chi}}
+\newcommand{\XinitIS}[2][]
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\rho_{#2}}}{\ensuremath{\check{\rho}_{#2}}}}
+
+
+\newcommand{\Xcard}{\ensuremath{r}}
+\newcommand{\order}{\ensuremath{r}}
+\newcommand{\G}{\ensuremath{G}}
+\newcommand{\g}{\ensuremath{g}}
+\newcommand{\Ycard}{\ensuremath{s}}
+%%%%%%%%%%%
+% Smoothing
+% Filter, predictor, smoother
+\newcommand{\filt}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\phi_{#2}}}{\ensuremath{\phi_{#1,#2}}}%
+}
+\newcommand{\pred}[3][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\phi_{#2|#3}}}{\ensuremath{\phi_{#1,#2|#3}}}%
+}
+\def\minorprob{\varphi}
+
+\newcommand{\adjfunc}[4][]
+{\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#4}{}}{\vartheta_{#2|#3}}{\vartheta_{#2|#3}(#4)}}
+{\ifthenelse{\equal{#1}{smooth}}{\ifthenelse{\equal{#4}{}}{\tilde{\vartheta}_{#2|#3}}{\tilde{\vartheta}_{#2|#3}(#4)}}
+{\ifthenelse{\equal{#1}{fully}}{\ifthenelse{\equal{#4}{}}{\vartheta^\star_{#2|#3}}{\vartheta^\star_{#2|#3}(#4)}}{\mathrm{erreur}}}}}
+
+\newcommand{\smwght}[3]{\tilde{\omega}_{#1|#2}^{#3}}
+\newcommand{\smwghtfunc}[2]{\tilde{\omega}_{#1|#2}}
+
+\newcommandtwoopt{\post}[4][][]%
+{
+\ifthenelse{\equal{#2}{}}
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\phi_{#3|#4}}}{\ensuremath{\phi_{#1,#3|#4}}}}%
+{\ifthenelse{\equal{#2}{hat}}{\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\phi}_{#3|#4}}}{\ensuremath{\hat{\phi}_{#1,#3|#4}}}}
+{\ifthenelse{\equal{#2}{tar}}{\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\phi}^{\mathrm{tar}}_{#3|#4}}}{\ensuremath{\hat{\phi}^{\mathrm{tar}}_{#1,#3|#4}}}}
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\phi}^{#2}_{#3|#4}}}{\ensuremath{\hat{\phi}^{#2}_{#1,#3|#4}}}}
+}
+}
+}
+% Variance asymptotique TCL
+
+\newcommand{\asymVar}[3][]{
+\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#3}{}}{\ensuremath{\Gamma_{#2}}}{\ensuremath{\Gamma_{#2}\left[#3\right]}}}
+{\ifthenelse{\equal{#3}{}}{\ensuremath{\Gamma_{#1,#2}}}{\ensuremath{\Gamma_{#1,#2}\left[#3\right]}}}
+}
+
+\newcommand{\asymVarest}[3][]{
+\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#3}{}}{\ensuremath{\Gamma^N_{#2}}}{\ensuremath{\Gamma^N_{#2}\left[#3\right]}}}
+{\ifthenelse{\equal{#3}{}}{\ensuremath{\Gamma^N_{#1,#2}}}{\ensuremath{\Gamma^N_{#1,#2}\left[#3\right]}}}
+}
+
+
+
+\newcommand{\backasymVar}[4][]{
+\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#4}{}}{\ensuremath{\check{\Gamma}_{#2|#3}}}{\ensuremath{\check{\Gamma}_{#2|#3}\left[#4\right]}}}
+{\ifthenelse{\equal{#4}{}}{\ensuremath{\check{\Gamma}_{#1,#2|#3}}}{\ensuremath{\check{\Gamma}_{#1,#2|#3}\left[#4\right]}}}
+}
+
+\newcommand{\backasymVarest}[4][]{
+\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#4}{}}{\ensuremath{\check{\Gamma}^N_{#3|#2}}}{\ensuremath{\check{\Gamma}^N_{#3|#2}\left[#4\right]}}}
+{\ifthenelse{\equal{#4}{}}{\ensuremath{\check{\Gamma}^N_{#1,#3|#2}}}{\ensuremath{\check{\Gamma}^N_{#1,#3|#2}\left[#4\right]}}}
+}
+
+\newcommand{\asymVarFearnhead}[4][]{
+\ifthenelse{\equal{#1}{}}{\ensuremath{\Upsilon_{#2|#3}\left[#4\right]}}{\ensuremath{\Upsilon_{#1,#2|#3}\left[#4\right]}}
+}
+
+\newcommand{\asymVarDoucet}[5][]
+{\ifthenelse{\equal{#1}{}}{\Delta^{#2}_{#3|#4}\left[#5\right]}{\Delta^{#2}_{#1,#3|#4}\left[#5\right]}}
+
+\newcommand{\asymVarDoucetest}[5][]
+{\ifthenelse{\equal{#1}{}}{\Delta^{#2,N}_{#3|#4}\left[#5\right]}{\Delta^{#2,N}_{#1,#3|#4}\left[#5\right]}}
+
+\newcommand{\asymVarJoint}[4][]{
+\ifthenelse{\equal{#1}{}}{\ensuremath{\tilde \Gamma_{#2|#3}\left[#4\right]}}{\ensuremath{\tilde \Gamma_{#1,#2|#3}\left[#4\right]}}
+}
+
+\newcommand{\asymVarJointlin}[4][]{
+\ifthenelse{\equal{#1}{}}{\ensuremath{\tilde \Gamma^{\mathrm{lin}}_{#2|#3}\left[#4\right]}}{\ensuremath{\tilde \Gamma^{\mathrm{lin}}_{#1,#2|#3}\left[#4\right]}}
+}
+
+
+\newcommandtwoopt{\incrasymVarJoint}[5][][]
+{
+\ifthenelse{\equal{#1}{}}
+    {\ifthenelse{\equal{#2}{forward}}{\ensuremath{\tilde{\sigma}^{2,\mathrm{f}}_{#3|#4}\left[#5\right]}}{\ensuremath{\tilde{\sigma}^{2,\mathrm{b}}_{#3|#4}\left[#5\right]}}}
+    {\ifthenelse{\equal{#2}{forward}}{\ensuremath{\tilde{\sigma}^{2,\mathrm{f}}_{#1,#3|#4}\left[#5\right]}}{\ensuremath{\tilde{\sigma}^{2,\mathrm{b}}_{#1,#3|#4}\left[#5\right]}}}
+}
+
+\newcommand{\incrasymVar}[4][]{
+\ifthenelse{\equal{#1}{}}{\ensuremath{\sigma^2_{#2|#3}\left[#4\right]}}{\ensuremath{\sigma^2_{#1,#2|#3}\left[#4\right]}}
+}
+
+% Likelihood
+\newcommand{\logl}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\ell_{#2}}}{\ensuremath{\ell_{#1,#2}}}%
+}
+\newcommand{\lhood}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\mathrm{L}_{#2}}}{\ensuremath{\mathrm{L}_{#1,#2}}}%
+}
+% Normalization constants
+\newcommand{\cc}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{c_{#2}}}{\ensuremath{c_{#1,#2}}}%
+}
+% Forward measure and backward functions, forward and backward kernels.
+\newcommand{\forvar}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\alpha_{#2}}}{\ensuremath{\alpha_{#1,#2}}}%
+}
+\newcommand{\nforvar}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\bar{\alpha}_{#2}}}{\ensuremath{\bar{\alpha}_{#1,#2}}}%
+}
+\newcommand{\backvar}[2]{\ensuremath{\beta_{#1|#2}}}
+\newcommand{\nbackvar}[2]{\ensuremath{\bar{\beta}_{#1|#2}}}
+\newcommand{\FK}[2]{\ensuremath{\mathrm{F}_{#1|#2}}}
+\newcommandtwoopt{\BK}[3][][]%
+{%
+\ifthenelse{\equal{#2}{}}{\ifthenelse{\equal{#1}{}}{\ensuremath{\mathrm{B}_{#3}}}{\ensuremath{\mathrm{B}_{#1,#3}}}}%
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\mathrm{B}}_{#3}}}{\ensuremath{\hat{\mathrm{B}}_{#1,#3}}}}
+}
+\newcommandtwoopt{\bk}[3][][]%
+{%
+\ifthenelse{\equal{#2}{}}{\ifthenelse{\equal{#1}{}}{\ensuremath{\mathrm{b}_{#3}}}{\ensuremath{\mathrm{b}_{#1,#3}}}}%
+{\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\mathrm{b}}_{#3}}}{\ensuremath{\hat{\mathrm{b}}_{#1,#3}}}}
+}
+
+% Smoohing functional
+\newcommand{\filtfunc}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\tau_{#2}}}{\ensuremath{\tau_{#1,#2}}}%
+}
+% Operator notations
+\newcommand{\predop}[3]{\ensuremath{\operatorname{\mathfrak{U}}\left\{{#1;#2,#3}\right\}}}
+\newcommand{\bayes}[2]{\ensuremath{\operatorname{\mathfrak{B}}\left\{{#1;#2}\right\}}}
+
+%%%%%%%%%%%%%%%%%%%%
+% Particle filtering
+% Estimators
+\newcommand{\NISE}[4][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\tilde{#2}^{\scriptstyle \mathrm{IS}}_{#4}\left(#3 \right)}}{\ensuremath{\tilde{#2}^{\scriptstyle \mathrm{IS}}_{#1,#4}\left(#3 \right)}}%
+}
+\newcommand{\ISE}[4][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\widehat{#2}^{\scriptstyle  \mathrm{IS}}_{#4} \left(#3 \right)}}{\ensuremath{\widehat{#2}^{\scriptstyle  \mathrm{IS}}_{#1,#4} \left(#3 \right)}}%
+}
+\newcommand{\SIRE}[4][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{#2}^{\scriptstyle  \mathrm{SIR}}_{#4} \left(#3 \right)}}{\ensuremath{\hat{#2}^{\scriptstyle  \mathrm{SIR}}_{#1,#4} \left(#3 \right)}}%
+}
+\newcommand{\MCE}[3]%
+{
+{\ensuremath{\hat{#1}^{\scriptstyle  \mathrm{MC}}_{#3} \left(#2 \right)}}%
+}
+% IS, SISR, ...
+% Transition kernel importance sampling
+\newcommand{\KISS}{\ensuremath{R}}
+% Transition density importance sampling (does not appear very frequently)
+\newcommand{\kiss}[3][]
+{\ifthenelse{\equal{#1}{}}{r_{#2|#3}}
+{\ifthenelse{\equal{#1}{fully}}{r^{\star}_{#2|#3}}
+{\ifthenelse{\equal{#1}{smooth}}{\tilde{r}_{#2|#3}}{\mathrm{erreur}}}}}
+
+% Target (just redefine post and filter...)
+\newcommand{\XinitTAR}{\ensuremath{\phi_{0}}}
+\newcommand{\TAR}[1]{\ensuremath{\phi_{0:#1|#1}}}
+% Particle approximation to TAR
+\newcommand{\ETAR}[1]{\ensuremath{\hat{\phi}_{0:#1|#1}}}
+% Coefficients of variation
+\newcommand{\CV}[2]{\mathrm{CV}_{#1}^{(#2)}}
+
+
+\newcommand{\fakeprior}{\gamma}
+\def\forward{\mathrm{f}}
+\def\backward{\mathrm{b}}
+
+
+% Les differentes Particules utilisées
+\newcommand{\epart}[2]{\ensuremath{\xi_{#1}^{#2}}}
+\newcommand{\smpart}[3]{\ensuremath{\tilde{\xi}_{#1|#2}^{#3}}}
+\newcommand{\epartpred}[2]{\ensuremath{\xi_{#1}^{#2}}}
+\newcommand{\epartpredIndex}[2]{\ensuremath{\xi_{#1}^{#2_{#1}}}}
+
+
+% Les différents poids utilisés
+\newcommand{\ewght}[2]{\ensuremath{\omega_{#1}^{#2}}}
+\newcommand{\ewghtfunc}[1]{\ensuremath{\omega_{#1}}}
+\newcommand{\swghtIndex}[3]{\ensuremath{\omega_{#1|#2}^{#3_{#1:#2}}}}
+\newcommand{\swghtIndexNorm}[2]{\ensuremath{\bar \omega_{#1}(\epartpredIndex{#1}{#2})}}
+\newcommand{\swght}[2]{\ensuremath{\omega_{#1}^{#2}}}
+\newcommand{\swghtNorm}[2]{\ensuremath{\bar \omega_{#1}^{#2}}}
+\newcommand{\swghtNormT}[2]{\ensuremath{\tilde \omega_{#1}^{#2}}}
+ \newcommand{\swghtcIndex}[2]{\ensuremath{\varpi_{#1}^{#2_{#1}}}}
+ \newcommand{\swghtc}[2]{{\ensuremath{\varpi_{#1}\left(\epartpred{#1}{#2} \right)}}}
+
+\newcommand{\wpart}[2]{\ensuremath{\Xi_{#1}^{#2}}}
+\newcommand{\wpartIndex}[2]{\ensuremath{\Xi_{#1}^{#2_{#1}}}}
+\newcommand{\wpartVect}[1]{\ensuremath{\mathbf{\Xi}_{#1}}}
+
+
+
+\newcommand{\funcweight}{\ensuremath{\Phi}}
+\newcommand{\sumwght}[2][]{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\Omega_{#2}}}{\ensuremath{\Omega_{#2}^{(#1)}}}}
+\newcommand{\tsumweight}[2][]{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\widetilde{\Omega}_{#2}}}{\ensuremath{\widetilde{\Omega}_{#2}^{(#1)}}}}
+\newcommand{\indexresidual}[2][]{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{J_{#2}}}{\ensuremath{J_{#2}^{(#1)}}}}
+\newcommand{\ebwght}[2]{\ensuremath{\bar{\omega}_{#1}^{#2}}}
+\newcommand{\epred}[2]{\ensuremath{\hat{\phi}_{#1|#2}^N}}
+\newcommand{\epredvar}[2]{\ensuremath{\upsilon_{#1|#2}}}
+\newcommand{\efilt}[2][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\phi}_{#2}}}{\ensuremath{\hat{\phi}_{#1,#2}}}%
+}
+\newcommand{\epost}[3][]%
+{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{\hat{\phi}_{#2|#3}}}{\ensuremath{\hat{\phi}_{#1,#2|#3}}}%
+}
+\newcommand{\efiltvar}[1]{\ensuremath{\upsilon_{#1}}}
+\newcommand{\efiltsigma}[1]{\ensuremath{\mathcal{G}_{#1}}}
+\newcommand{\proppart}[2]{\ensuremath{\tilde{\xi}_{#1}^{#2}}}
+\newcommand{\bproppart}[2]{\ensuremath{\bar{\xi}_{#1}^{#2}}}
+
+\newcommand\ntimes[1]{G_{#1}}
+\newcommand\ntimesres[1]{H_{#1}}
+
+
+\newcommand{\calF}{\mathcal F}
+
+\newcommandtwoopt{\backDist}[4][][]%
+{
+\ifthenelse{\equal{#1}{}}{\ifthenelse{\equal{#2}{}}{\psi_{#3|#4}}{\psi_{#2,#3|#4}}}%
+{\ifthenelse{\equal{#1}{hat}}{\ifthenelse{\equal{#2}{}}{\hat{\psi}_{#3|#4}}{\hat{\psi}_{#2,#3|#4}}}
+{\ifthenelse{\equal{#1}{tar}}{\ifthenelse{\equal{#2}{}}{\hat{\psi}^{\mathrm{tar}}_{#3|#4}}{\hat{\psi}^{\mathrm{tar}}_{#2,#3|#4}}}
+{\ifthenelse{\equal{#1}{aux}}{\ifthenelse{\equal{#2}{}}{\hat{\psi}^{\mathrm{aux}}_{#3|#4}}{\hat{\psi}^{\mathrm{aux}}_{#2,#3|#4}}}
+}
+}
+}
+}
+
+
+\newcommand{\backweight}{\ensuremath{{\check{\omega}}}}
+\newcommand{\backL}{\ensuremath{{\check{L}}}}
+\newcommand{\backG}{\ensuremath{{\check{G}}}}
+\newcommand{\backGinit}{\widetilde{G}}
+\newcommand{\ebackinit}{\ensuremath{{\check{\rho}}}}
+
+\newcommand{\ebackpart}[3]{\ensuremath{{\check{\xi}}_{#1|#2}^{#3}}}
+\newcommand{\ebackwght}[3]{\ensuremath{{\check{\omega}}_{#1|#2}^{#3}}}
+\newcommand{\ebackwghtfunc}[2]{\ensuremath{{\check{\omega}}_{#1|#2}}}
+\newcommand{\backsumwght}[3][]{%
+\ifthenelse{\equal{#1}{}}{\ensuremath{{\check{\Omega}}_{#2|#3}}}{\ensuremath{{\check{\Omega}}_{#2|#3}^{(#1)}}}}
+
+
+\newcommand{\instrpostaux}[2]{\ensuremath{\pi_{#1|#2}}}
+
+\newcommand{\eric}[1]{\todo[color=green!20]{ Er: #1}}
+\newcommand{\sylv}[1]{\todo[color=pink!20]{ Sy: #1}}
+
+\newcommandx\functionset[3][1=,3=]{
+\ifthenelse{\equal{#1}{c}}
+{\mathrm{C}(\mathsf{#2})}%fonctions continues
+{\ifthenelse{\equal{#1}{bc}}{\mathrm{C}^{#3}_b(\mathsf{#2})}%fonctions continues born\'{e}es
+{\ifthenelse{\equal{#1}{u}}{\mathrm{U}^{#3}(\mathsf{#2})}%fonctions uniform\'{e}ment continues
+{\ifthenelse{\equal{#1}{bu}}{\mathrm{U}_b^{#3}(\mathsf{#2})}%fonctions uniform\'{e}ment continues born\'{e}es
+{\ifthenelse{\equal{#1}{l}}{\mathrm{Lip}_{#3}(\mathsf{#2})}%fonctions lipschitz
+{\ifthenelse{\equal{#1}{cz}}{\mathrm{C}_0^{#3}(\mathsf{#2})}
+{\ifthenelse{\equal{#1}{k}}{\mathrm{C}_c^{#3}(\mathsf{#2})} %fonctions continues à support compact
+{\ifthenelse{\equal{#1}{bl}}{\mathrm{Lip}_{b#3}(\mathsf{#2})}%fonctions lipschitz born\'{e}es
+{\ifthenelse{\equal{#1}{ldp}}{\mathrm{Lip}_{#3}(\mathsf{#2})}%fonctions lipschitz à poids
+{\mathbb{F}_{#1}^{#3}(\mathsf{#2},\mathcal{#2})}%le reste
+}}}}}}}}}
+
+\usepackage{geometry}
+\geometry{top=3.8cm, bottom=3.8cm, left=3.8cm , right=3.8cm}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+
+\newcommand{\tcr}[1]{\textcolor{red}{#1}}
+\renewcommand{\baselinestretch}{1.0}
+
+
+
+\begin{document}
+
+\author{Thi Ngoc Minh Nguyen\footnote{LTCI, CNRS and T\'el\'ecom ParisTech.}\and Sylvain Le {C}orff\footnote{Laboratoire de Math\'ematiques d'Orsay, Univ. Paris-Sud, CNRS, Universit\'e Paris-Saclay.}\and Eric Moulines\footnote{Centre de Math\'ematiques Appliqu\'ees, Ecole Polytechnique.}}
+
+
+
+
+
+\title{On the two-filter approximations of marginal smoothing distributions in general state space models}
+
+\date{}
+\lhead{Nguyen et al.}
+\rhead{Two-filter approximations of marginal smoothing distributions}
+
+\maketitle
+
+\begin{abstract}
+A prevalent problem in general state space models is the approximation of the smoothing distribution of a state
+conditional on the observations from the past, the present, and the future. The aim of this paper is to provide a rigorous analysis of such approximations of smoothed distributions provided by the two-filter algorithms. We extend the results available for the approximation of smoothing distributions to these two-filter approaches which combine a forward filter approximating the filtering distributions with a backward information filter approximating a quantity proportional to the posterior distribution of the state given future observations.
+\end{abstract}
+
+\section{Introduction}
+\input{introduction}
+
+\section{The two-filter algorithms}
+\input{TwoFiltersAlgorithm}
+
+\section{Exponential deviation inequality for  the two-filter algorithms}
+\input{ExponentialTwoFilters}
+
+\section{Asymptotic normality of the two-filter algorithms}
+\input{CLTTwoFilters}
+
+\section{Proofs}
+\input{proofs}
+
+\clearpage
+
+\appendix
+
+\input{appendix}
+
+\bibliographystyle{plain}
+\bibliography{TwoFilterbib}
+
+\end{document} 

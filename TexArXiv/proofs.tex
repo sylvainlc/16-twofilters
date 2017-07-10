@@ -1,0 +1,334 @@
+\label{sec:proofs}
+\subsection{Proof of Theorem~\ref{thm:Hoeffding-Two-Populations}}
+\label{proof:thm:Hoeffding-Two-Populations}
+Define $\mathcal{G}^N_{t|T} \eqdef \sigma(\ebackpart{t}{T}{j},\ebackwght{t}{T}{j}, 1\leq j \leq N)$ and
+$$
+f_{t|T}(x) \eqdef  \backsumwght{t}{T}^{-1}\sum_{j=1}^N\ebackwght{t}{T}{j}h(x,\ebackpart{t}{T}{j})
+$$
+whose oscillation is bounded by $\oscnorm{h}$. By the exponential inequality for the  auxiliary particle filter (Proposition~\ref{prop:exponential-inequality-forward}), there exist constants $B_{s}$ and $C_{s}$ such that
+\begin{multline}\label{eq:inegExpoBack2}
+\PP\left( \left| \sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\epartpred{s}{i},\ebackpart{t}{T}{j}) -\sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \int \filt{\Xinit,s}(\rmd x_s)h(x_s,\ebackpart{t}{T}{j})   \right| > \epsilon \right)\\
+=\PE\left[ \CPP{\left|\sum_{i=1}^N \frac{\swght{s}{i}}{\sumwght{s}} f_{t|T}(\epartpred{s}{i})-\filt{\Xinit,s}(f_{t|T})\right|>\epsilon}{\mathcal{G}^N_{t|T}}\right]\leq  B_{s} \rme^{-C_{s} N \epsilon^2 / \oscnorm[2]{h}}\eqsp.
+\end{multline}
+Since the oscillation of the function $x \mapsto \int  \filt{\Xinit,s}(\rmd x_s)h(x_s,x)$ is bounded by $\oscnorm{h}$, by Proposition~\ref{prop:exponential-inequality-backward} there exist constants $B_{t|T}$ and $C_{t|T}$
+such that
+\begin{multline}
+\label{eq:inegExpoBack1}
+\PP\left(  \left| \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \int \filt{\Xinit,s}(\rmd x_s)h(x_s,\ebackpart{t}{T}{j})  - \filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}[h] \right|> \epsilon \right)\\
+\leq  B_{t|T} \rme^{-C_{t|T} N \epsilon^2/\oscnorm[2]{h}}\eqsp,
+\end{multline}
+which concludes the proof.
+\subsection{Proof of Theorem~\ref{thm:Hoeffding-Fearnhead}}
+\label{proof:thm:Hoeffding-Fearnhead}
+Define $\tilde{h}_{s|T} \eqdef h - \post[\chi]{s}{T} [h]$. Lemma~\ref{lem:hoeffding:ratio} is used with
+\begin{align*}
+a_N &\eqdef N^{-1} \sum_{i=1}^N \smwght{s}{T}{i} \tilde{h}_{s|T}(\smpart{s}{T}{i})\eqsp, \quad b_N \eqdef N^{-1} \tilde{\Omega}_{s|T}\eqsp,\\
+b& \eqdef \frac{\filt{\Xinit,s}\otimes \backDist[][\gamma]{s+1}{T}\left[\int q^{[2]}(\cdot;x_s) g_s(x_s) \rmd x_s\odot \gamma_{s+1}^{-1}\right]}{\filt{\Xinit,s}\otimes \backDist[][\gamma]{s+1}{T}\left[\adjfunc[smooth]{s}{T}{} \odot \gamma_{s+1}^{-1}\right]}\eqsp.
+\end{align*}
+Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:bound:ab} is satisfied using $\beta \eqdef b$ and  $|a_N|/|b_N| \le \oscnorm{h}$. To prove Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:a} for $a_N$, note that Hoeffding inequality implies that, for any $\epsilon > 0$,
+\[
+\CPP{\left| a_N - \CPE{\smwght{s}{T}{1} \tilde{h}_{s|T}(\smpart{s}{T}{1})}{\mathcal{G}^N_{s,T}} \right| \geq \epsilon}{\mathcal{G}^N_{s,T}} \leq 2\, \mathrm{exp}\left\{-\frac{N\epsilon^2}{8\esssup{\smwghtfunc{s}{T}}^2\oscnorm[2]{h}}\right\} \eqsp,
+\]
+where $\mathcal{G}^N_{s,T} \eqdef \mathcal{G}^{N,+}_{s-1} \vee \mathcal{G}^{N,-}_{s+1,T}$ and
+\begin{align*}
+\mathcal{G}^{N,+}_{s}&\eqdef \sigma\left\{ \{ (\ewght{u}{i}, \epart{u}{i}) \}_{i=1}^N, u =1, \dots, s-1\right\}\eqsp,\\
+\mathcal{G}^{N,-}_{s,T} &\eqdef \sigma \left\{ \{ (\ebackwght{u}{T}{i},\ebackpart{u}{T}{i}) \}_{i=1}^N, u=s+1,\dots, T \right\}\eqsp.
+\end{align*}
+On the other hand, for all $\ell \in\{1,\ldots,N\}$,
+\begin{multline*}
+\CPE{\smwght{s}{T}{\ell} \tilde{h}_{s|T}(\smpart{s}{T}{\ell})}{\mathcal{G}^N_{s,T}} \\
+= \frac{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j}\gamma_{s+1}^{-1}(\ebackpart{s+1}{T}{j}) \int q^{[2]}(\epart{s-1}{i},\ebackpart{s+1}{T}{j};x_s) g_s(x_s) \tilde{h}_{s|T}(x_s) \rmd x_s}{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j}\gamma_{s+1}^{-1}(\ebackpart{s+1}{T}{j})\adjfunc[smooth]{s}{T}{\epart{s-1}{i},\ebackpart{s+1}{T}{j}}} \eqsp.
+\end{multline*}
+The proof of Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:a} is then completed by applying Lemma~\ref{lem:hoeffding:ratio} to $a'_N$, $b'_N$ and $b'$ defined by:
+\begin{align*}
+a'_N & \eqdef \sum_{i,j=1}^N \frac{\ewght{s-1}{i}\,\ebackwght{s+1}{T}{j}}{\sumwght{s-1}\,\backsumwght{s+1}{T}}\gamma_{s+1}^{-1}(\ebackpart{s+1}{T}{j}) \int q^{[2]}(\epart{s-1}{i},\ebackpart{s+1}{T}{j};x_s) g_s(x_s) \tilde{h}_{s|T}(x_s) \rmd x_s\eqsp,\\
+b'_N & \eqdef \sum_{i,j=1}^N \frac{\ewght{s-1}{i}\,\ebackwght{s+1}{T}{j}}{\sumwght{s-1}\,\backsumwght{s+1}{T}}\gamma_{s+1}^{-1}(\ebackpart{s+1}{T}{j})\adjfunc[smooth]{s}{T}{\epart{s-1}{i},\ebackpart{s+1}{T}{j}}\eqsp,\\
+b' &\eqdef \filt{\Xinit,s}\otimes \backDist[][\gamma]{s+1}{T}[\adjfunc[smooth]{s}{T}{} \odot \gamma_{s+1}^{-1}]\eqsp.
+\end{align*}
+Note first that Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:bound:ab} is satisfied using $\beta' \eqdef b'$ and $\left|a'_N/b'_N\right|\le \esssup{\smwghtfunc{s}{T}}\oscnorm{h}$. In addition, by \eqref{eq:filtBackfilt},
+\[
+\filt{\Xinit,s}\otimes \backDist[][\gamma]{s+1}{T}[\bar{h}_{s|T}] \propto \post[\chi]{s}{T}[\tilde{h}_{s|T}] = 0\eqsp,
+\]
+where
+\[
+\bar{h}_{s|T}(x,x') \eqdef \int q^{[2]}(\cdot;x_s) g_s(x_s)\tilde{h}_{s|T}(x_s) \rmd x_s\odot\gamma_{s+1}^{-1}(x,x')\eqsp.
+\]
+Theorem~\ref{thm:Hoeffding-Two-Populations} ensures that Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:a} is satisfied for $a'_N$
+as
+$$
+\oscnorm{\bar{h}_{s|T}}\le 2 \esssup{\adjfunc[smooth]{s}{T}{} \odot \gamma_{s+1}^{-1}}\esssup{\smwghtfunc{s}{T}}\oscnorm{h} \eqsp.
+$$
+Similarly, Theorem~\ref{thm:Hoeffding-Two-Populations} yields:
+\[
+\mathbb{P}\left(\left|b'_N - b' \right|\ge \epsilon\right)\le B_s \rme^{-C_s N \epsilon^2 /\oscnorm[2]{\adjfunc[smooth]{s}{T}{} \odot \gamma_{s+1}^{-1}}}\eqsp,
+\]
+which proves  Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:b} for $b'_N$ and concludes the proof of Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:a} for $a_N$. The proof of Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:b} for $b_N$ is along the same lines.
+
+\subsection{Proof of Theorem~\ref{th:exp:forward-backward}}
+\label{proof:th:exp:forward-backward}
+Define
+\[
+\fup{h}{s}(x,x')\eqdef \fakeprior^{-1}_{s+1}(x') h(x) q(x,x')\quad\mbox{and}\quad\fdown{h}{s}(x,x')\eqdef \fakeprior_s^{-1}(x') q(x,x') h(x')\eqsp.
+\]
+It follows from the definition of the forward and backward smoothing weights \eqref{eq:definition-smoothing-weight-forward} and \eqref{eq:definition-smoothing-weight-backward} that,
+\begin{align}
+\label{eq:forward-approximation}
+& \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{f}}}{\tilde{\Omega}^{\mathrm{f}}_{s|T}} h(\epart{s}{i}) =
+\frac{\sumwght{s}^{-1} \backsumwght{s+1}{T}^{-1} \sum_{i,j=1}^N \ewght{s}{i} \ebackwght{s+1}{T}{j} \fup{h}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j}) }
+{\sumwght{s}^{-1} \backsumwght{s+1}{T}^{-1} \sum_{i,j=1}^N \ewght{s}{i} \ebackwght{s+1}{T}{j}  \fup{\1}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j}) } \eqsp, \\
+\label{eq:backward-approximation}
+& \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{b}}}{\tilde{\Omega}^{\mathrm{b}}_{s|T}} h(\ebackpart{s}{T}{i})= \frac{\sumwght{s-1}^{-1} \backsumwght{s}{T}^{-1} \sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s}{T}{j} \fdown{h}{s}(\epart{s-1}{i},\ebackpart{s}{T}{j})}{\sumwght{s-1}^{-1} \backsumwght{s}{T}^{-1} \sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s}{T}{j}\fdown{\1}{s}(\epart{s-1}{i},\ebackpart{s}{T}{j})} \eqsp.
+ \end{align}
+ On the other hand, from the definition of the filtering distribution and of the backward information filter
+\begin{align*}
+& \post[\Xinit]{s}{T}[h] = \filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{h}{s}\right]/\filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{\1}{s}\right] \eqsp, \\
+& \post[\Xinit]{s}{T}[h] = \filt{\Xinit,s-1}\otimes\backDist{s}{T}\left[\fdown{h}{s}\right]/\filt{\Xinit,s-1}\otimes\backDist{s}{T}\left[\fdown{\1}{s}\right]\eqsp.
+\end{align*}
+Then, \eqref{eq:Exponential-Inequality-Forward} is established by writing:
+\[
+\sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{f}}}{\tilde{\Omega}^{\mathrm{f}}_{s|T}} h(\epart{s}{i}) - \post[\Xinit]{s}{T} [h] = a_N^{i, \mathrm{f}}/b_N^{i, \mathrm{f}}\eqsp,
+\]
+where
+\begin{align*}
+a_N^{i, \mathrm{f}}&\eqdef \sum_{i,j=1}^N \frac{\ewght{s}{i} \ebackwght{s+1}{T}{j}}{\sumwght{s}\backsumwght{s+1}{T}}\fup{\1}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})\left\{\frac{\fup{h}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})}{\fup{\1}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})}-\frac{\filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{h}{s}\right]}{\filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{\1}{s}\right]}\right\}\eqsp,\\
+b_N^{i, \mathrm{f}} & \eqdef \sum_{i,j=1}^N \frac{\ewght{s}{i} \ebackwght{s+1}{T}{j}}{\sumwght{s}\backsumwght{s+1}{T}}  \fup{\1}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})\eqsp,\quad b\eqdef \filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{\1}{s}\right]\eqsp.
+\end{align*}
+Lemma~\ref{lem:hoeffding:ratio} may then be applied with $\beta \eqdef b$. Note that
+\[
+\frac{\fup{h}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})}{\fup{\1}{s}(\epart{s}{i},\ebackpart{s+1}{T}{j})}-\frac{\filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{h}{s}\right]}{\filt{\Xinit,s}\otimes\backDist{s+1}{T}\left[\fup{\1}{s}\right]} =  h(\epart{s}{i}) -  \post[\Xinit]{s}{T}[h]\eqsp,
+\]
+which ensures that $\left |a_N^{i, \mathrm{f}}/b_N^{i, \mathrm{f}}\right|\le \oscnorm{h}$ and that Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:bound:ab} is satisfied. By
+\begin{align*}
+&\oscnorm{\fup{\1}{s}} = \oscnorm{ q\odot \gamma_{s+1}^{-1}}\eqsp,\\
+&\oscnorm{\fup{\1}{s}\odot\left\{h(\epart{s}{i}) -  \post[\Xinit]{s}{T}[h]\right\}} \le 2 \esssup{q\odot \gamma_{s+1}^{-1}}\oscnorm{h}\eqsp,
+\end{align*}
+Theorem~\ref{thm:Hoeffding-Two-Populations} shows that Lemma~\ref{lem:hoeffding:ratio}-\eqref{it:hoeff:a} and \eqref{it:hoeff:b} are satisfied. The proof of \eqref{eq:Exponential-Inequality-Backward} follows the exact same lines.
+
+\subsection{Proof of Theorem~\ref{thm:CLT-Two-Populations}}
+\label{proof:thm:CLT-Two-Populations}
+For all $1\le t\le T$, the result is shown by induction on $s$ where $s \in \{0, \dots, t-1\}$. Write $\tilde{h}_{0,t}\eqdef h - \filt{\Xinit,0}\otimes \backDist[][\gamma]{t}{T}[h]$ and set, for $i \in \{1,\dots,N\}$,
+\begin{equation*}
+U_{N,i} \eqdef N^{-1/2} \ewght{0}{i} \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \tilde{h}_{0,t}(\epart{0}{i},\ebackpart{t}{T}{j})\eqsp.
+\end{equation*}
+Then,
+\[
+\sqrt{N}\left(\sum_{i,j=1}^N \frac{\swght{0}{i}}{\sumwght{0}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\epartpred{0}{i},\ebackpart{t}{T}{j}) - \filt{\Xinit,0}\otimes \backDist[][\gamma]{t}{T}[h]
+\right) = \left(\sumwght{0}/N\right)^{-1}\sum_{i=1}^N U_{N,i}\eqsp.
+\]
+Define $\mathcal{G}_{N,i} \eqdef  \sigma\left(\{\epart{0}{\ell}\}_{\ell \leq i}, \{\ebackpart{u}{T}{j}\}_{t \leq u \leq T}, j=1,\dots,N \right)$. Then,
+\[
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}} = N^{1/2} \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \XinitIS{0}\left[\ewght{0}{}\tilde{h}_{0,t}(\cdot, \ebackpart{t}{T}{j}) \right]\eqsp.
+\]
+As $\int \backDist[][\gamma]{t}{T}(\rmd x_t)\XinitIS{0}(\rmd x_0)\ewght{0}{}(x_0)\tilde{h}_{0,t}(x_0,x_t) = 0$, by the CLT for the backward information filter (Proposition~\ref{prop:CLT-backward}),
+\begin{equation*}
+\label{eq:CLT-1}
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}} \dlim_{N\to\infty} \mathcal{N}\left( 0, \backasymVar{t}{T}{H_{0,t}} \right) \eqsp,
+\end{equation*}
+where $H_{0,t}(x_t)\eqdef \int \XinitIS{0}(\rmd x_0)\ewght{0}{}(x_0)\tilde{h}_{0,t}(x_0,x_t)$.
+We now prove that
+\[
+\CPE{\exp\left(\rmi u \sum_{i=1}^N \{U_{N,i}-\CPE{U_{N,i}}{\mcg{N,i-1}}\} \right)}{\mcg{N,0}}\plim_{N \to \infty} \exp\left(-\frac{u^2 \sigma^2_{0,t|T}[h]}{2}\right)\eqsp,
+\]
+where
+\[
+\sigma^2_{0,t|T}[h]\eqdef  \int \XinitIS{0}(\rmd x)\ewght{0}{2}(x)\backDist[][\gamma]{t}{T}^2[\tilde{h}_{0,t}(x,\cdot)]\eqsp.
+\]
+This is done by applying \cite[Theorem~A.3]{douc:moulines:2008} which requires to show that
+\begin{align}
+\label{eq:condRD-1}
+ &\sum_{i=1}^N \left(\CPE{U_{N,i}^2}{\mcg{N,i-1}}-\CPE{U_{N,i}}{\mcg{N,i-1}}^2 \right)\plim_{N \to \infty} \sigma^2_{0,t|T}[h]\eqsp, \\
+\label{eq:condRD-3}
+ &\sum_{i=1}^N \CPE{U_{N,i}^2 \1\{|U_{N,i}|>\varepsilon\}}{\mcg{N,i-1}} \plim_{N \to \infty} 0\eqsp.
+\end{align}
+By Proposition~\ref{prop:exponential-inequality-backward},
+\[
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}}^2 = \left( \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} H_{0,t}(\ebackpart{t}{T}{j}) \right)^2  \plim_{N\to\infty} \backDist[][\gamma]{t}{T}^2[H_{0,t}] = 0\eqsp.
+\]
+On the other hand,
+\begin{align*}
+\mathbb{E}\left[\left|\sum_{i=1}^N \CPE{U_{N,i}^2}{\mcg{N,i-1}} -\sigma^2_{0,t|T}[h]\right|\right]& \\
+&\hspace{-5cm}= \int \XinitIS{0}(\rmd x)\ewght{0}{2}(x) \mathbb{E}\left[\left|\left( \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \tilde{h}_{0,t}(x,\ebackpart{t}{T}{j}) \right)^2-\backDist[][\gamma]{t}{T}^2[ \tilde{h}_{0,t}(x,\cdot)]\right|\right]\eqsp,\\
+&\hspace{-5cm}\le 2\oscnorm{h}\int \XinitIS{0}(\rmd x)\ewght{0}{2}(x)\mathbb{E}\left[A_N(x)\right]\eqsp,
+\end{align*}
+where
+\[
+A_N(x)\eqdef\left|\sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \tilde{h}_{0,t}(x,\ebackpart{t}{T}{j})-\backDist[][\gamma]{t}{T}[ \tilde{h}_{0,t}(x,\cdot)]\right|\eqsp.
+\]
+By Proposition~\ref{prop:exponential-inequality-backward}, there exist $B_{t|T}$ and $C_{t|T}$ such that for all $x\in\Xset$,
+\begin{multline}
+\label{eq:L1fromExp}
+\mathbb{E}\left[A_N(x)\right] = \int_0^{\infty}\mathbb{P}\left(A_N(x)\ge \varepsilon\right)\rmd \varepsilon \\
+\le B_{t|T} \int_0^{\infty}\rme^{-C_{t|T} N \epsilon^2 / \oscnorm{h}^2}\rmd\varepsilon\le D_{t|T}\oscnorm{h}N^{-1/2}\eqsp,
+\end{multline}
+which shows that
+\[
+\sum_{i=1}^N \CPE{U_{N,i}^2}{\mcg{N,i-1}}\plim_{N \to \infty}  \sigma^2_{0,t|T}[h]
+\]
+and concludes the proof of  \eqref{eq:condRD-1}. For all $N\ge 1$,
+\begin{equation*}
+\{ |U_{N,i}| \geq \varepsilon \}  \subseteq \left\{ \ewght{0}{i} \geq \varepsilon N^{1/2} \oscnorm{h}^{-1} \right\} \eqsp,
+\end{equation*}
+which implies that
+\[
+\sum_{i=1}^N \CPE{U_{N,i}^2 \1\{|U_{N,i}| \geq \varepsilon\}}{\mcg{N,i-1}} \\
+\leq \oscnorm{h}^2\int \XinitIS{0}(\rmd x) \ewght{0}{2}(x) \1 \left\{ \ewght{0}{}(x) \geq N^{1/2}  \oscnorm{h}^{-1}\right\}
+\]
+and \eqref{eq:condRD-3} follows by letting $N \to \infty$.  Note that
+\[
+N^{-1}\sumwght{0}\plim_{N\to\infty}  \int \Xinit(\rmd x_0) g_0(x_0)\eqsp,
+\]
+which shows \eqref{eq:asymVarjoint} since
+\begin{align*}
+\asymVarJoint{0,t}{T}{\tilde{h}_{0,t}} &= \left(\int \Xinit(\rmd x_0) g_0(x_0)\right)^{-2}\\
+&\hspace{2.6cm}\times\left(\backasymVar[\gamma]{t}{T}{H_{0,t}} + \int \XinitIS{0}(\rmd x)\ewght{0}{2}(x)\backDist[][\gamma]{t}{T}^2[\tilde{h}_{0,t}(x,\cdot)]\right)\eqsp,\\
+&=   \backasymVar[\gamma]{t}{T}{\int \filt{\Xinit,0}(\rmd x_0)\tilde{h}_{0,t}(x_0,\cdot)} + \asymVar[\Xinit]{0}{\int \backDist[][\gamma]{t}{T}(\rmd x_t)\tilde{h}_{0,t}(\cdot,x_t)} \eqsp.
+\end{align*}
+Assume now that the result holds for some $s-1$.
+Write $\tilde{h}_{s,t}\eqdef h - \filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}[h]$ and set, for $i \in \{1,\dots,N\}$,
+\begin{equation*}
+U_{N,i} \eqdef N^{-1/2}\swght{s}{i}\sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \tilde{h}_{s,t}(\epartpred{s}{i},\ebackpart{t}{T}{j})\eqsp.
+\end{equation*}
+Then,
+\[
+\sqrt{N}\left(\sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\epartpred{s}{i},\ebackpart{t}{T}{j}) - \filt{\Xinit,0}\otimes \backDist[][\gamma]{t}{T}[h]
+\right) = \left(\sumwght{s}/N\right)^{-1}\sum_{i=1}^N U_{N,i}\eqsp.
+\]
+Define, for $1 \leq i \leq N$,
+\[
+\mcg{N,i}\eqdef \sigma \left( \left\{ \epart{s}{j} \right\}_{j=1}^i, \left\{ \epart{u}{\ell} \right\}_{\ell=1}^N, \left\{ \ebackpart{v}{T}{j} \right\}_{j=1}^N,  1 \leq u < s, t \leq v \leq T\right) \eqsp.
+\]
+Then,
+$$
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}} = \left( \filt{\chi,s-1}^N[\adjfuncforward{s}] \right)^{-1} N^{1/2}\sum_{i,j=1}^N\frac{\swght{s-1}{i}}{\sumwght{s-1}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} H_s(\epartpred{s-1}{i}, \ebackpart{t}{T}{j})\eqsp,
+$$
+where
+\begin{equation}
+\label{eq:def:Hst}
+H_{s,t}(x_{s-1},x_t) \eqdef \int q(x_{s-1},x)g_s(x)\tilde{h}_{s,t}(x,x_t)\rmd x\eqsp.
+\end{equation}
+Since $\filt{\chi,s-1}\otimes \backDist[][\gamma]{t}{T}[H_{s,t}]=0$,
+by the induction assumption,
+$$
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}} \dlim_{N \to \infty} \mathcal{N}\left(0, \asymVarJoint{s-1,t}{T}{H_{s,t}}/ \filt{\chi,s-1}^2[\adjfuncforward{s}] \right) \eqsp.
+$$
+We will now prove that
+\[
+\CPE{\exp\left(\rmi u \sum_{i=1}^N \{U_{N,i}-\CPE{U_{N,i}}{\mcg{N,i-1}}\} \right)}{\mcg{N,0}} \plim_{N \to \infty} \exp\left(-\frac{u^2 \sigma^2_{s,t|T}[h]}{2}\right) \eqsp,
+\]
+where
+\begin{align*}
+\sigma^2_{s,t|T}[h] &\eqdef \filt{\chi,s-1}[\adjfuncforward{s}]^{-1}\filt{\Xinit,s-1}\left[f_{s-1,t}\right]\eqsp,\\
+f_{s-1,t}(x_{s-1}) &\eqdef \int q(x_{s-1},x_s)\ewghtfunc{s}(x_{s-1},x_s)
+\backDist[][\gamma]{t}{T}^2[\tilde{h}_{s,t}(x_s,\cdot)] g_ s(x_s)\rmd x_s\eqsp.
+\end{align*}
+This is done using again \cite[Theorem~A.3]{douc:moulines:2008} and proving that \eqref{eq:condRD-1} and \eqref{eq:condRD-3} hold with $\sigma^2_{0,t|T}[h]$ replaced by $\sigma^2_{s,t|T}[h]$. Note that
+\begin{equation*}
+ \sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}}^2= \left(\sum_{i, j=1}^N\frac{\swght{s-1}{i}}{\sumwght{s-1}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} H_{s,t}(\epartpred{s-1}{i}, \ebackpart{t}{T}{j})\right)^2/(\filt{\chi,s-1}^N[\adjfuncforward{s}])^2 \eqsp,
+\end{equation*}
+which converges in probability to $0$ by Theorem~\ref{thm:Hoeffding-Two-Populations} and the fact that $\filt{\chi,s-1}\otimes \backDist[][\gamma]{t}{T}[H_{s,t}]=0$. In addition,
+\begin{align*}
+\sum_{i=1}^N \CPE{U_{N,i}^2}{\mcg{N,i-1}}&= \left(\filt{\chi,s-1}^N[\adjfuncforward{s}]\right)^{-1}\sum_{i=1}^N\frac{\ewght{s-1}{i}}{\sumwght{s-1}}\int  \frac{q^2(\epart{s-1}{i}, x_{s}) g_s(x_s)}{\adjfuncforward{s}(\epart{s-1}{i})\kissforward{s}{s}(\epart{s-1}{i},x_s)} \\
+&\hspace{4cm}\times \left(\backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}(x_s,\cdot)]\right)^2 g_s(x_s) \rmd x_s\eqsp,\\
+ &= \left(\filt{\chi,s-1}^N[\adjfuncforward{s}]\right)^{-1}\sum_{i=1}^N\frac{\ewght{s-1}{i}}{\sumwght{s-1}}\int  \ewghtfunc{s}(\epart{s-1}{i},x_s)q(\epart{s-1}{i}, x_{s}) \\
+&\hspace{4cm}\times \left(\backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}(x_s,\cdot)]\right)^2 g_s(x_s) \rmd x_s\eqsp,\\
+&=\left(\filt{\chi,s-1}^N[\adjfuncforward{s}]\right)^{-1}\filt{\Xinit,s-1}^N\left[ f_{s-1,t}^N\right]\eqsp,
+\end{align*}
+where
+\[
+f_{s-1,t}^N(x_{s-1}) \eqdef \int q(x_{s-1},x_s)\ewghtfunc{s}(x_{s-1},x_s)
+\left(\backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}(x_s,\cdot)]\right)^2 g_ s(x_s)\rmd x_s\eqsp.
+\]
+First note that $\filt{\chi,s-1}^N[\adjfuncforward{s}]\plim_{N \to \infty}\filt{\chi,s-1}[\adjfuncforward{s}]$ and write
+\[
+\left|\filt{\Xinit,s-1}^N\left[ f_{s-1,t}^N\right] - \filt{\Xinit,s-1} \left[ f_{s-1,t}\right]\right| \le A^N_{s,t} + B^N_{s,t} \eqsp,
+\]
+where $A^N_{s,t} \eqdef|\filt{\Xinit,s-1}^N[ f_{s-1,t}^N]  - \filt{\Xinit,s-1}^N[f_{s-1,t}]|$ 
+ and $B^N_{s,t}  \eqdef |\filt{\Xinit,s-1}^N [f_{s-1,t}]-\filt{\Xinit,s-1}[f_{s-1,t}]|$. As $(\ewght{s-1}{i},\epart{s-1}{i})_{i=1}^N$ and $(\ebackwght{t}{T}{j},\ebackpart{t}{T}{j})_{j=1}^N$ are independent,
+\[
+\mathbb{E}\left[A^N_{s,t}\right] \le \esssup{\ewghtfunc{s}}\esssup{g_s}\mathbb{E}\left[\sum_{i=1}^N\frac{\ewght{s-1}{i}}{\sumwght{s-1}}\int  q(\epart{s-1}{i}, x_{s})\mathbb{E}\left[\left|\Delta  \backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}](x_s)\right|\right]\rmd x_s\right]\eqsp,
+\]
+where $\Delta  \backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}](x_s) \eqdef (\backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}(x_s,\cdot)])^2- \backDist[][\gamma]{t}{T}^2[\tilde{h}_{s,t}(x_s,\cdot)]$.
+Following the same steps as in \eqref{eq:L1fromExp}, there exists $D_{t|T}$ such that
+\[
+\mathbb{E}\left[\left|\Delta  \backDist[][\gamma]{t}{T}^N[\tilde{h}_{s,t}](x_s)\right|\right] \le 2D_{t|T}\oscnorm{h}^2/\sqrt{N}\eqsp,
+\]
+which yields
+\begin{align*}
+\mathbb{E}\left[A^N_{s,t}\right] &\le 2\oscnorm{h}^2\esssup{\ewghtfunc{s}}\esssup{g_s}D_{T|t}\mathbb{E}\left[\sum_{i=1}^N\frac{\ewght{s-1}{i}}{\sumwght{s-1}}\int  q(\epart{s-1}{i}, x_{s})\rmd x_s\right] /\sqrt{N}\eqsp,\\
+&\le 2\oscnorm{h}^2\esssup{\ewghtfunc{s}}\esssup{g_s}D_{T|t}/\sqrt{N}
+\end{align*}
+and $\mathbb{E}\left[A^N_{s,t}\right]\longrightarrow_{N\to \infty}0 $. On the other hand, as $\oscnorm{f_{s-1,t}}\le \oscnorm{h}^2\esssup{\ewghtfunc{s}}\esssup{g_s}$, $B^N_{s,t}\plim_{N \to \infty}0$ by Proposition~\ref{prop:exponential-inequality-forward}.
+Finally, the tightness condition \eqref{eq:condRD-3} holds since $|U_{N,i}| \leq N^{-1/2}\esssup{\ewghtfunc{s}}\oscnorm{h}$. Note that,
+\[
+N^{-1}\sumwght{s}\plim_{N\to\infty} \filt{\chi,s-1}\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]/\filt{\chi,s-1}[\adjfuncforward{s}]\eqsp.
+\]
+Therefore \eqref{eq:asymVarjoint} holds with
+\begin{align*}
+\asymVarJoint{s,t}{T}{\tilde{h}_{s,t}} &= \frac{\filt{\chi,s-1}^2[\adjfuncforward{s}]}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}\left\{\frac{\asymVarJoint{s-1,t}{T}{H_{s,t}}}{\filt{\chi,s-1}^2[\adjfuncforward{s}]}  +  \frac{\filt{\Xinit,s-1}\left[f_{s-1,t}\right]}{\filt{\chi,s-1}[\adjfuncforward{s}]}\right\}\eqsp,\\
+&=   \frac{\asymVarJoint{s-1,t}{T}{H_{s,t}}}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}  +  \frac{\filt{\Xinit,s-1}\left[f_{s-1,t}\right]\filt{\chi,s-1}[\adjfuncforward{s}]}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}\eqsp,
+\end{align*}
+where, by induction assumption,
+\begin{multline*}
+\asymVarJoint{s-1,t}{T}{H_{s,t}} = \asymVar[\Xinit]{s-1}{\int \backDist[][\gamma]{t}{T}(\rmd x_t)H_{s,t}(\cdot,x_t)} \\
++ \backasymVar[\gamma]{t}{T}{\int \filt{\Xinit,s-1}(\rmd x_{s-1})H_{s,t}(x_{s-1},\cdot)}\eqsp.
+\end{multline*}
+The proof is completed upon noting that
+\begin{align*}
+\frac{\int \filt{\Xinit,s-1}(\rmd x_{s-1})H_s(x_{s-1},\cdot)}{\filt{\chi,s-1}\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]} &= \frac{\int \filt{\Xinit,s-1}(\rmd x_{s-1})q(x_{s-1},x_s)g_s(x_s)\tilde{h}_{s,t}(x_s,\cdot)\rmd x_s}{\filt{\chi,s-1}\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}\eqsp,\\
+&= \int \filt{\Xinit,s}(\rmd x_{s})\tilde{h}_{s,t}(x_s,\cdot)
+\end{align*}
+and, by Proposition~\ref{prop:CLT-forward},
+\begin{multline*}
+\asymVar[\Xinit]{s-1}{\frac{\int \backDist[][\gamma]{t}{T}(\rmd x_t)H_{s,t}(\cdot,x_t)}{\filt{\chi,s-1}\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]}} + \frac{\filt{\Xinit,s-1}\left[f_{s-1,t}\right]\filt{\chi,s-1}[\adjfuncforward{s}]}{\filt{\chi,s-1}^2\left[\int q(\cdot,x_s)g_s(x_s)\rmd x_s\right]} \\
+= \asymVar[\Xinit]{s}{\int \backDist[][\gamma]{t}{T}(\rmd x_t)\tilde{h}_{s,t}(\cdot,x_t)}\eqsp.
+\end{multline*}
+\subsection{Proof of Theorem~\ref{thm:CLT-Fearnhead-smoother}}
+\label{proof:thm:CLT-Fearnhead-smoother}
+Write $\tilde{h}_{s,T} =  h - \post{\Xinit,s}{T}(h)$. Note that
+\[
+\sqrt{N}\sum_{i=1}^N \frac{\smwght{s}{T}{i}}{\tilde{\Omega}_{s|T}} \tilde{h}_{s,T}(\smpart{s}{T}{i}) = \left(\tilde{\Omega}_{s|T}/N\right)^{-1}\sum_{i=1}^N U_{N,i}\eqsp,
+\]
+where $U_{N,\ell} \eqdef N^{-1/2} \smwght{s}{T}{\ell} \tilde{h}_{s,T}(\smpart{s}{T}{\ell})$. Set, for $i \in \{1, \dots, N\}$,
+\begin{multline*}
+\mcg{N,i} \eqdef \sigma\left\{ \{ (\smwght{s}{T}{\ell},\smpart{s}{T}{\ell}) \}_{\ell=1}^i \eqsp,\eqsp\{ (\ewght{u}{\ell}, \epart{u}{\ell}) \}_{\ell=1}^N, u =0, \dots, s-1,\right.\\
+\left. \{ (\ebackwght{v}{T}{\ell},\ebackpart{v}{T}{\ell}) \}_{\ell=1}^N, v =s+1, \dots, T\right\} \eqsp.
+\end{multline*}
+By the proof of Theorem \ref{thm:Hoeffding-Fearnhead},
+\[
+N^{-1} \tilde{\Omega}_{s|T} \plim_{N \to \infty}
+\frac{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T} \left[ \int q^{[2]}(\cdot,x) g_s(x) \rmd x \odot \fakeprior_{s+1}^{-1}\right]}
+{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T} \left[ \adjfunc[smooth]{s}{T}{} \odot \fakeprior_{s+1}^{-1} \right]} \eqsp.
+\]
+The proof therefore amounts to establish a CLT for $\sum_{\ell=1}^N U_{N,\ell}$ and then to use Slutsky Lemma.
+The limit distribution of $\sum_{\ell=1}^N U_{N,\ell}$ is again obtained using  the invariance principle for triangular array of dependent random variables derived in \cite{douc:moulines:2008}. As
+\begin{multline*}
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}}\\
+ = \sqrt{N} \frac{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j} \int q^{[2]}(\cdot; x_s) g_s(x_s) \tilde{h}_{s,T}(x_s)\rmd x_s\odot \fakeprior_{s+1}^{-1}(\epart{s-1}{i},\ebackpart{s+1}{T}{j}) }
+{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j} \fakeprior_{s+1}^{-1}(\ebackpart{s+1}{T}{j}) \adjfunc[smooth]{s}{T}{\epart{s-1}{i},\ebackpart{s+1}{T}{j}}}\eqsp,
+\end{multline*}
+it follows from Theorems \ref{thm:Hoeffding-Two-Populations} and \ref{thm:CLT-Two-Populations} that
+\[
+\sum_{i=1}^N \CPE{U_{N,i}}{\mcg{N,i-1}} \plim_{N \to \infty} \mathcal{N}\left(0, \frac{\Sigma_s[\tilde{h}_{s,T}]}{\left(\filt{\Xinit,s-1} \otimes \backDist{s+1}{T} [\adjfunc[smooth]{s}{T}{}\odot\gamma_{s+1}^{-1}] \right)^2} \right) \eqsp.
+\]
+Using that
+\begin{equation*}
+\post{\Xinit,s}{T}[\tilde{h}_{s,T}]= \frac{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T}\left[ \int q^{[2]}(\cdot;x) g_s(x) \tilde{h}_{s,T}(x) \rmd x\right] \odot \gamma_{s+1}^{-1}}
+{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T}\left[ \int q^{[2]}(\cdot;x) g_s(x)\rmd x\right] \odot \gamma_{s+1}^{-1} }= 0 \eqsp,
+\end{equation*}
+Theorem \ref{thm:Hoeffding-Two-Populations} yields
+\begin{align*}
+&\sum_{i=1}^N\CPE{U_{N,i}}{\mcg{N,i-1}}^2 = \\
+&\hspace{1cm}\left(\frac{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j} \fakeprior_{s+1}^{-1}(\ebackpart{s+1}{T}{j}) \int q^{[2]}(\epart{s-1}{i},\ebackpart{s+1}{T}{j}; x) g_s(x) \tilde{h}_{s,T}(x)}
+{\sum_{i,j=1}^N \ewght{s-1}{i} \ebackwght{s+1}{T}{j} \fakeprior_{s+1}^{-1}(\ebackpart{s+1}{T}{j}) \adjfunc[smooth]{s}{T}{\epart{s-1}{i},\ebackpart{s+1}{T}{j}}} \right)^2\\
+&\hspace{1cm}\plim_{N \to \infty} \left( \frac{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T}\left[ \int q^{[2]}(\cdot;x) g_s(x) \tilde{h}_{s,T}(x) \rmd x\odot \fakeprior_{s+1}^{-1}\right]}
+{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T} [\adjfunc[smooth]{s}{T}{} \odot \fakeprior_{s+1}^{-1}]} \right)^2 = 0 \eqsp.
+\end{align*}
+Similarly, using again Theorem \ref{thm:Hoeffding-Two-Populations},
+\begin{multline*}
+\sum_{i=1}^N \CPE{U_{N,i}^2}{\mcg{N,i-1}} \plim_{N \to \infty} \\
+\frac{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T}\left[ \int \smwghtfunc{s}{T}(\cdot;x) q^{[2]}(\cdot;x) g_s(x) \tilde{h}_{s,T}^2(x) \rmd x \odot \fakeprior_{s+1}^{-1}\right]}
+{\filt{\Xinit,s-1} \otimes \backDist{s+1}{T} [\adjfunc[smooth]{s}{T}{} \odot \fakeprior_{s+1}^{-1}]} \eqsp.
+\end{multline*}
+Since under A\ref{assum:borne-FFBS}, $|U_{N,i}| \leq N^{-1/2} \esssup{\smwghtfunc{s}{T}} \oscnorm{h}$, for any $\epsilon > 0$, $$\sum_{i=1}^N \CPE{U^2_{N,i} \1 \{ |U_{N,i}| \geq \epsilon \}}{\mcg{N,i-1}} \plim_{N \to \infty} 0 \eqsp,$$
+which concludes the proof.
+

@@ -1,0 +1,127 @@
+\label{sec:CLTTwoFilters}
+We now establish CLT for the two-filter algorithms. Note first that under assumptions A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters}, for all $0\le s,t\le T$ a CLT may be derived for the weighted samples $\{(\epart{s}{\ell},\ewght{s}{\ell})\}_{\ell=1}^N$ and $\{ (\ebackpart{t}{T}{i},\ebackwght{t}{T}{i}) \}_{i=1}^N$ which target respectively the filtering distribution $\filt{\Xinit,s}$ and the backward information filter $\backDist[][\gamma]{t}{T}$. By Propositions~\ref{prop:CLT-forward} and~\ref{prop:CLT-backward}, there exist $\asymVar[\Xinit]{s}{}$ and $\backasymVar[\gamma]{t}{T}{}$ such that for any $h \in \functionset[b]{X}$,
+\begin{align}
+N^{1/2} \sum_{i=1}^N \frac{\ewght{s}{i}}{\sumwght{s}} \left(h(\epart{s}{i}) - \filt{\Xinit,s}[h]\right) &\dlim_{N \to \infty} \mathcal{N}\left(0,\asymVar[\Xinit]{s}{h - \filt{\Xinit,s}[h]}\right)\eqsp,\label{eq:CLT:forward}\\
+N^{1/2} \sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \left(h(\ebackpart{t}{T}{j})- \backDist[][\gamma]{t}{T}[h]\right) &\dlim_{N \to \infty} \mathcal{N}\left(0,\backasymVar[\gamma]{t}{T}{h-\backDist[][\gamma]{t}{T}[h]}\right)\label{eq:CLT:backward}\eqsp.
+\end{align}
+Theorem~\ref{thm:CLT-Two-Populations} establishes a CLT for the weighted sample $\{ \swght{s}{i}\ebackwght{t}{T}{j}, (\epartpred{s}{i},\ebackpart{t}{T}{j})\}_{i,j=1}^N$ which targets the product distribution $\filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}$. As an important consequence, the asymptotic variance of the weighted sample $\{\swght{s}{i}\ebackwght{t}{T}{j}, (\epartpred{s}{i},\ebackpart{t}{T}{j})\}_{i,j=1}^N$ is the sum of two contributions, the first one involves $\asymVar[\Xinit]{s}{}$ and the second one $\backasymVar[\gamma]{t}{T}{}$. Intuitively, this may be explained by the fact that the estimator $\filt{\Xinit,s}^N\otimes\backDist[][\gamma]{t}{T}^N[h]$ is obtained by mixing two independent weighted samples which suggests the following decomposition:
+\begin{multline*}
+\sqrt{N}\sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \tilde{h}_{s,t}(\epartpred{s}{i},\ebackpart{t}{T}{j}) = \sqrt{N}\sum_{j=1}^N \frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} \filt{\Xinit,s}[\tilde{h}_{s,t}(\cdot,\ebackpart{t}{T}{j})]\\
++ \sqrt{N}\sum_{i=1}^N \frac{\swght{s}{i}}{\sumwght{s}} \backDist[][\gamma]{t}{T}[\tilde{h}_{s,t}(\epartpred{s}{i},\cdot)] + \mathcal{E}^{N}_{s,T|t}(\tilde{h}_{s,t}) \eqsp,
+\end{multline*}
+where $\tilde{h}_{s,t} = h - \filt{\Xinit,s}\otimes\backDist[][\gamma]{t}{T}[h]$ and
+\[
+\mathcal{E}^{N}_{s,T|t}(h) \eqdef \sqrt{N}\sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}}\left\{h(\epartpred{s}{i},\ebackpart{t}{T}{j}) -  \filt{\Xinit,s}[h(\cdot,\ebackpart{t}{T}{j})]  - \backDist[][\gamma]{t}{T}[h(\epartpred{s}{i},\cdot)]\right\}\eqsp.
+\]
+A CLT for the two independent first terms is obtained by \eqref{eq:CLT:forward} and \eqref{eq:CLT:backward}. It remains then to prove that $\mathcal{E}^{N}_{s,T|t}(h)$ converges in probability to $0$. However, this cannot be obtained directly from the exponential deviation inequality derived in Theorem~\ref{thm:Hoeffding-Two-Populations} and requires sharper controls of the smoothing error (for instance nonasymptotic $\mathrm{L}^p$-mean error bounds).
+Theorem~\ref{thm:CLT-Two-Populations}  provides a direct proof following the asymptotic theory of weighted system of particles developed in \cite{douc:moulines:2008}.
+\begin{thm}
+\label{thm:CLT-Two-Populations}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then,  for all $0 \leq s<t \leq T$ and all $h \in \functionset[b]{X\times X}$,
+\begin{multline*}
+\sqrt{N}\left(\sum_{i,j=1}^N \frac{\swght{s}{i}}{\sumwght{s}}\frac{\ebackwght{t}{T}{j}}{\backsumwght{t}{T}} h(\epartpred{s}{i},\ebackpart{t}{T}{j}) - \filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}[h]
+\right) \\
+\dlim_{N \to \infty} \mathcal{N}\left(0,\asymVarJoint{s,t}{T}{h- \filt{\Xinit,s}\otimes \backDist[][\gamma]{t}{T}[h]}\right) \eqsp,
+\end{multline*}
+where $\asymVarJoint{s,t}{T}{h}$ is defined by:
+\begin{equation}
+\label{eq:asymVarjoint}
+\asymVarJoint{s,t}{T}{h} \eqdef \asymVar[\Xinit]{s}{\int \backDist[][\gamma]{t}{T}(\rmd x_t)h(\cdot,x_t)} +  \backasymVar[\gamma]{t}{T}{\int \filt{\Xinit,s}(\rmd x_{s}) h(x_s,\cdot)}\eqsp,
+\end{equation}
+with $\asymVar[\Xinit]{s}{}$ and $\backasymVar[\gamma]{t}{T}{}$ are given in Proposition~\ref{prop:CLT-forward} and Proposition~\ref{prop:CLT-backward}.
+\end{thm}
+
+\begin{proof}
+The proof is postponed to Section~\ref{proof:thm:CLT-Two-Populations}.
+\end{proof}
+Define
+\begin{align*}
+\sigma_s &\eqdef \filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s+1}{T} \left[ \int  q^{[2]}(\cdot,x) g_s(x) \rmd x \odot \fakeprior_{s+1}^{-1} \right] \eqsp, \\
+\Sigma_s[h] &\eqdef \asymVarJoint{s-1,s+1}{T}{\int q^{[2]}(\cdot;x) g_s(x)  h(x) \rmd x \odot \fakeprior_{s+1}^{-1}} \eqsp.
+\end{align*}
+Theorem~\ref{thm:CLT-Fearnhead-smoother} provides a CLT for the $\fwt$ algorithm of \cite{fearnhead:wyncoll:tawn:2010}
+\begin{thm}[CLT for the $\fwt$ algorithm of \cite{fearnhead:wyncoll:tawn:2010}]
+\label{thm:CLT-Fearnhead-smoother}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then,  for all $1\le s \le T-1$ and all $h \in \functionset[b]{X}$,
+\begin{equation*}
+\sqrt{N}\left( \sum_{i=1}^N \frac{\smwght{s}{T}{i}}{\tilde{\Omega}_{s|T}} h(\smpart{s}{T}{i}) - \post[\Xinit]{s}{T}[h]
+\right)
+\dlim_{N \to \infty} \mathcal{N}\left(0,\asymVarFearnhead[\Xinit]{s}{T}{h - \post[\Xinit]{s}{T}[h]}\right) \eqsp.
+\end{equation*}
+where
+\begin{multline}
+\label{eqdef:asymvarfearnhead} 
+\asymVarFearnhead[\Xinit]{s}{T}{h}= \sigma_s^{-2} \left\{ \Sigma_s[h] + \filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s+1}{T} \left[\adjfunc[smooth]{s}{T}{} \odot \fakeprior^{-1}_{s+1} \right] \phantom{\int} \right. \\  \times \left.  \filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s+1}{T}\left[ \int \smwghtfunc{s}{T}(\cdot;x) q^{[2]}(\cdot,x) g_s(x) h^2(x) \rmd x \odot \fakeprior^{-1}_{s+1} \right]\right\} \eqsp.
+\end{multline}
+\end{thm}
+
+\begin{proof}
+The proof is postponed to Section~\ref{proof:thm:CLT-Fearnhead-smoother}.
+\end{proof}
+
+The decompositions \eqref{eq:forward-approximation} and \eqref{eq:backward-approximation} together with Theorem \ref{thm:CLT-Two-Populations} allow to prove a CLT form the forward and the backward
+approximations of the marginal smoothing distribution. Theorem~\ref{thm:CLT-Doucet-Forward-Backward-Smoother} is a direct consequence of Proposition~\ref{prop:CLT-backward}, Theorem~\ref{thm:CLT-Two-Populations} and Slutsky Lemma.
+\begin{thm}[CLT for the $\bdm$ algorithm of  \cite{briers:doucet:maskell:2010}]
+\label{thm:CLT-Doucet-Forward-Backward-Smoother}
+Assume that A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold for some $T<\infty$. Then, for all $1 \leq s \leq T-1$ and all $h \in \functionset[b]{X}$,
+\begin{equation*}
+\sqrt{N}\left( \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{f}}}{\tilde{\Omega}^{\mathrm{f}}_{s|T}} h(\epart{s}{i}) - \post[\Xinit]{s}{T}[h]
+\right) \dlim_{N \to \infty} \mathcal{N}\left(0,\asymVarDoucet[\Xinit]{\forward}{s}{T}{h- \post[\Xinit]{s}{T}[h]} \right)\eqsp,
+\end{equation*}
+where
+\begin{align*}
+\asymVarDoucet[\Xinit]{\forward}{s}{T}{h} &\eqdef \asymVarJoint{s,s+1}{T}{H^{\forward}_s} /\{ \filt{\Xinit,s} \otimes \backDist[][\gamma]{s+1}{T}[q \odot \fakeprior_{s+1}^{-1}] \}^2\eqsp,\\
+H^{\forward}_s (x,x') &\eqdef h(x) q(x,x') \fakeprior_{s+1}^{-1}(x')\eqsp.
+\end{align*}
+Similarly,
+\begin{equation*}
+\sqrt{N}\left( \sum_{i=1}^N \frac{\smwght{s}{T}{i, \mathrm{b}}}{\tilde{\Omega}^{\mathrm{b}}_{s|T}} h(\epart{s}{i}) - \post[\Xinit]{s}{T}[h]
+\right)
+\dlim_{N \to \infty} \mathcal{N}\left(0, \asymVarDoucet[\Xinit]{\backward}{s}{T}{h- \post[\Xinit]{s}{T}[h]}\right)\eqsp,
+\end{equation*}
+where
+\begin{align*}
+\asymVarDoucet[\Xinit]{\backward}{s}{T}{h} &\eqdef \asymVarJoint{s-1,s}{T}{H_s^{\backward} }/\{ \filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s}{T}[q \odot \fakeprior_s^{-1}] \}^2\eqsp,\\
+H_s^{\backward} (x,x') &\eqdef  q(x,x') \fakeprior_s^{-1}(x')h(x')\eqsp.
+\end{align*}
+\end{thm}
+Note that $\sigma_s$ and $\Sigma_s[h]$ may be written as:
+\[
+\sigma_s = \filt{\Xinit,s} \otimes \backDist[][\gamma]{s+1}{T} \left[q\odot \fakeprior_{s+1}^{-1} \right]\times \filt{\Xinit,s-1}\left[ \int  q(\cdot,x) g_s(x) \rmd x\right]
+\]
+and by Theorem~\ref{thm:CLT-Two-Populations},
+\begin{multline*}
+\Sigma_s[h] = \asymVar[\Xinit]{s-1}{\int q(\cdot,x)g_s(x)h^1_{s+1}(x)\rmd x} \\
++ \filt{\Xinit,s-1}^2\left[ \int  q(\cdot,x) g_s(x) \rmd x\right]\backasymVar[\gamma]{s+1}{T}{h^2_{s+1}}\eqsp,
+\end{multline*}
+with $h^1_{s+1}(x)\eqdef h(x)\backDist[][\gamma]{s+1}{T}[q(x,\cdot)\gamma_{s+1}^{-1}]$ and $h^2_{s+1}(x)\eqdef \gamma_{s+1}^{-1}(x)\filt{\Xinit,s}[h(\cdot)q(\cdot,x)]$. In the case where $\kiss[smooth]{s}{T}(x_s,x_{s+1}; x_s) = \kissforward{s}{s}(x_{s-1}, x_s)$ in \eqref{eq:inst-fearnhead:linear} and $\adjfunc[smooth]{s}{T}{x,x'} = \adjfuncforward{s}(x)\adjfunc{s}{T}{x'}$, the smoothing distribution approximation given by the $\fwt$ algorithm is obtained by reweighting the particles obtained in the forward filtering pass and $\asymVarFearnhead[\Xinit]{s}{T}{h}$ may be compared to $\asymVarDoucet[\Xinit]{\forward}{s}{T}{h}$ as both approximations of $\post[\Xinit]{s}{T}[h]$ are based on the same particles (associated with different importance weights). In this case, the two last terms in \eqref{eqdef:asymvarfearnhead} are easily interpreted in the case  $\adjfunc{s}{T}{} = \gamma_{s+1}$:
+\[
+\filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s+1}{T} \left[\adjfunc[smooth]{s}{T}{} \odot \fakeprior^{-1}_{s+1} \right] = \filt{\Xinit,s-1}[ \adjfuncforward{s}]\backDist[][\gamma]{s+1}{T}[\adjfunc{s}{T}{}\fakeprior^{-1}_{s+1}] = \filt{\Xinit,s-1}[ \adjfuncforward{s}]
+\]
+and by Jensen's inequality,
+\begin{align*}
+&\filt{\Xinit,s-1} \otimes \backDist[][\gamma]{s+1}{T}\left[ \int \smwghtfunc{s}{T}(\cdot;x) q^{[2]}(\cdot,x) g_s(x) h^2(x) \rmd x \odot \fakeprior^{-1}_{s+1} \right] \\
+&\hspace{.5cm}= \int \filt{\Xinit,s-1}(\rmd x_{s-1})\omega_s(x_{s-1},x)g_s(x)q(x_{s-1},x)\backDist[][\gamma]{s+1}{T}[q^2(x,\cdot)\gamma_{s+1}^{-2}]h^2(x) \rmd x\eqsp,\\
+&\hspace{.5cm}\ge \int \filt{\Xinit,s-1}(\rmd x_{s-1})\omega_s(x_{s-1},x)g_s(x)q(x_{s-1},x)(h^1_{s+1}(x))^2 \rmd x\eqsp.
+\end{align*}
+Therefore, by Proposition~\ref{prop:CLT-backward} and Theorem~\ref{thm:CLT-Doucet-Forward-Backward-Smoother}
+\[
+\asymVarFearnhead[\Xinit]{s}{T}{h} \ge \frac{\asymVar[\Xinit]{s}{h^1_{s+1}} + \backasymVar[\gamma]{s+1}{T}{h^2_{s+1}}}{\left(\filt{\Xinit,s} \otimes \backDist[][\gamma]{s+1}{T} \left[q\odot \fakeprior_{s+1}^{-1} \right]\right)^2}=\asymVarDoucet[\Xinit]{\forward}{s}{T}{h}\eqsp,
+\]
+where the last inequality comes from Theorem~\ref{thm:CLT-Two-Populations}. The same inequality holds for $\asymVarDoucet[\Xinit]{\backward}{s}{T}{h}$ when $\kiss[smooth]{s}{T}(x_{s-1},x_{s+1}; x_s) = \kiss{s}{T}(x_{s+1}, x_s)$ in \eqref{eq:inst-fearnhead:linear}.
+
+
+\begin{rem}
+Under the strong mixing assumptions H\ref{assum:mix} and H\ref{assum:mix:gamma}, time uniform bounds for the asymptotic variances of  the two-filter approximations of the marginal smoothing distributions may be obtained.
+\begin{enumerate}[(i)]
+\item If A\ref{assum:bound-likelihood} and A\ref{assum:borne-FFBS} hold uniformly in $T$ and if H\ref{assum:mix} holds, then it is proved in \cite{douc:garivier:moulines:olsson:2011} that there exists $C>0$ such that for all $s \geq 0$ and all $h \in \functionset[b]{X}$, the asymptotic variance $\asymVar[\Xinit]{s}{h}$ defined in Proposition~\ref{prop:CLT-forward} satisfies:
+\[
+\asymVar[\Xinit]{s}{h} \le C \esssup{h}^2\eqsp.
+\]
+\item Following the same steps, if A\ref{assum:bound-likelihood} and A\ref{assum:borne-TwoFilters} hold uniformly in $T$  and if H\ref{assum:mix} and H\ref{assum:mix:gamma} hold, there exists $C>0$ such that for all $0\le t\le T$ and all $h \in \functionset[b]{X}$, the asymptotic variance $\backasymVar{t}{T}{h}$ defined in Proposition~\ref{prop:CLT-backward} satisfies:
+\[
+\backasymVar[\gamma]{t}{T}{h}\le C \esssup{h}^2\eqsp.
+\]
+\item As a consequence, if A\ref{assum:bound-likelihood}, A\ref{assum:borne-FFBS} and A\ref{assum:borne-TwoFilters} hold uniformly in $T$  and  if H\ref{assum:mix} and H\ref{assum:mix:gamma} hold, the asymptotic variances $\asymVarJoint{s,t}{T}{h}$, $\asymVarDoucet[\Xinit]{\forward}{s}{T}{h}$, $\asymVarDoucet[\Xinit]{\backward}{s}{T}{h}$ and $\asymVarFearnhead[\Xinit]{s}{T}{h}$ defined in Theorem~\ref{thm:CLT-Two-Populations}, Theorem~\ref{thm:CLT-Fearnhead-smoother}  and Theorem~\ref{thm:CLT-Doucet-Forward-Backward-Smoother} are all uniformly bounded.
+\end{enumerate}
+\end{rem} 
